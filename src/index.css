@@ -1,0 +1,90 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+    writing-mode: horizontal-tb;
+    text-orientation: mixed;
+  }
+  body {
+    font-family: 'Noto Sans Bengali', system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+    @apply bg-dark-50 text-dark-800 antialiased;
+    line-height: 1.7;
+    word-break: break-word;
+    overflow-wrap: anywhere;
+    overflow-x: hidden;
+    writing-mode: horizontal-tb;
+  }
+  * {
+    -webkit-tap-highlight-color: transparent;
+    box-sizing: border-box;
+    min-width: 0;
+    min-height: 0;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+  img, svg, video {
+    max-width: 100%;
+    height: auto;
+    display: block;
+  }
+  input, button, textarea, select {
+    font-family: inherit;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    text-wrap: balance;
+  }
+}
+
+@layer utilities {
+  .scrollbar-thin::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  .scrollbar-thin::-webkit-scrollbar-track {
+    background: #f1f5f9;
+    border-radius: 10px;
+  }
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, #0ea5e9, #0369a1);
+    border-radius: 10px;
+  }
+  .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, #0284c7, #075985);
+  }
+  .text-balance {
+    text-wrap: balance;
+  }
+  .line-clamp-1 {
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .line-clamp-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .line-clamp-4 {
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .safe-bottom {
+    padding-bottom: env(safe-area-inset-bottom, 0);
+  }
+  .hide-scrollbar::-webkit-scrollbar { display: none; }
+  .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+}
