@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { Calendar, Eye, ArrowRight, Sparkles } from 'lucide-react';
-import  pic from '../images/images.jpg'
+import pic from '../images/images.jpg';
 
 export default function FeaturedPost({ post }) {
   if (!post) return null;
@@ -11,19 +11,25 @@ export default function FeaturedPost({ post }) {
       <div className="absolute -bottom-24 -left-24 w-80 h-80 lg:w-96 lg:h-96 bg-primary-300/20 rounded-full blur-3xl" />
 
       <div className="relative grid grid-cols-1 lg:grid-cols-5 gap-0">
-        <Link to={`/post/${post.slug}`} className="lg:col-span-3 block relative aspect-[16/10] sm:aspect-[16/9] lg:aspect-auto overflow-hidden group">
+        <Link
+          to={`/post/${post.slug}`}
+          className="lg:col-span-3 block relative aspect-[16/10] sm:aspect-[16/9] lg:aspect-auto overflow-hidden group"
+        >
           <img
             src={pic}
             alt={post.title}
             className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
           />
+
           <div className="absolute inset-0 bg-gradient-to-r from-dark-900/60 via-dark-900/20 to-transparent lg:bg-gradient-to-t lg:from-dark-900/70 lg:via-dark-900/10 lg:to-transparent" />
+
           <div className="absolute top-3 left-3 sm:top-4 sm:left-4">
             <span className="inline-flex items-center gap-1.5 px-2.5 sm:px-3.5 py-1 sm:py-1.5 rounded-full bg-gradient-to-r from-primary-500 to-primary-700 text-white text-[10px] sm:text-xs font-extrabold shadow-glow">
               <Sparkles size={11} className="sm:w-3 sm:h-3" />
-              ফিচার্ড পোস্ট
+              Featured Post
             </span>
           </div>
+
           <div className="absolute bottom-3 left-3 right-3 sm:bottom-4 sm:left-4 sm:right-4 lg:hidden">
             <span className="inline-block px-2 py-0.5 rounded-md bg-white/90 backdrop-blur text-[10px] sm:text-[11px] font-bold text-primary-700 mb-1.5">
               {post.category}
@@ -54,15 +60,22 @@ export default function FeaturedPost({ post }) {
               <div className="w-5 h-5 sm:w-7 sm:h-7 rounded-full bg-gradient-to-br from-primary-400 to-primary-600 flex items-center justify-center text-white text-[9px] sm:text-xs font-bold">
                 {post.author.charAt(0)}
               </div>
-              <span className="font-semibold text-dark-700 truncate max-w-[110px] sm:max-w-none">{post.author}</span>
+
+              <span className="font-semibold text-dark-700 truncate max-w-[110px] sm:max-w-none">
+                {post.author}
+              </span>
             </span>
+
             <span className="inline-flex items-center gap-1">
               <Calendar size={13} className="sm:w-3.5 sm:h-3.5" />
               {post.date}
             </span>
+
             <span className="inline-flex items-center gap-1">
               <Eye size={13} className="sm:w-3.5 sm:h-3.5" />
-              <span className="tabular-nums">{post.views?.toLocaleString()}</span>
+              <span className="tabular-nums">
+                {post.views?.toLocaleString()}
+              </span>
             </span>
           </div>
 
@@ -70,8 +83,11 @@ export default function FeaturedPost({ post }) {
             to={`/post/${post.slug}`}
             className="group inline-flex items-center justify-center gap-2 self-start px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl bg-gradient-to-r from-primary-500 to-primary-700 hover:from-primary-600 hover:to-primary-800 text-white font-bold text-xs sm:text-sm transition-all shadow-glow hover:-translate-y-0.5 active:translate-y-0 w-full sm:w-auto"
           >
-            বিস্তারিত পড়ুন
-            <ArrowRight size={15} className="sm:w-4 sm:h-4 group-hover:translate-x-0.5 transition-transform" />
+            Read More
+            <ArrowRight
+              size={15}
+              className="sm:w-4 sm:h-4 group-hover:translate-x-0.5 transition-transform"
+            />
           </Link>
         </div>
       </div>

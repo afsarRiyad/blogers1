@@ -2,7 +2,7 @@ import Hero from '../components/Hero.jsx';
 import FeaturedPost from '../components/FeaturedPost.jsx';
 import PostGrid from '../components/PostGrid.jsx';
 import Sidebar from '../components/Sidebar.jsx';
-import CategorySection from '../components/CategorySection.jsx';
+
 import TelegramCTA from '../components/TelegramCTA.jsx';
 import { posts } from '../data/posts.js';
 import { Sparkles, Clock, ArrowRight } from 'lucide-react';
@@ -21,7 +21,7 @@ export default function Home() {
           <div className="min-w-0 space-y-7 sm:space-y-10 order-1">
             <FeaturedPost post={featured} />
 
-            <CategorySection />
+          
 
             <section>
               <div className="flex items-end justify-between gap-3 mb-4 sm:mb-6">

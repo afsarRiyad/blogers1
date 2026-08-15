@@ -4,7 +4,7 @@ import Breadcrumb from '../components/Breadcrumb.jsx';
 import PostGrid from '../components/PostGrid.jsx';
 import Sidebar from '../components/Sidebar.jsx';
 import TelegramCTA from '../components/TelegramCTA.jsx';
-import CategorySection from '../components/CategorySection.jsx';
+
 import { categories, getPostsByCategory, posts } from '../data/posts.js';
 
 const colorMap = {

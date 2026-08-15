@@ -1,8 +1,10 @@
 import { Link } from 'react-router-dom';
-import { Calendar, Eye, ChevronRight } from 'lucide-react';
-import pen from '../images/images.jpg'
+import { Calendar, Eye, ArrowRight } from 'lucide-react';
 
 export default function PostCard({ post, variant = 'default' }) {
+  if (!post) return null;
+
+  // Compact version — used for sidebar / small post lists
   if (variant === 'compact') {
     return (
       <Link
@@ -17,15 +19,15 @@ export default function PostCard({ post, variant = 'default' }) {
             className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
           />
         </div>
+
         <div className="flex-1 min-w-0 flex flex-col justify-center">
           <h4 className="text-sm font-bold text-dark-900 group-hover:text-primary-700 transition-colors line-clamp-2 leading-snug">
             {post.title}
           </h4>
-          <div className="flex items-center gap-3 mt-2 text-xs text-dark-500">
-            <span className="inline-flex items-center gap-1">
-              <Calendar size={11} />
-              {post.date}
-            </span>
+
+          <div className="flex items-center gap-1.5 mt-2 text-xs text-dark-500">
+            <Calendar size={11} />
+            <span>{post.date}</span>
           </div>
         </div>
       </Link>
@@ -33,58 +35,82 @@ export default function PostCard({ post, variant = 'default' }) {
   }
 
   return (
-    <article className="group bg-white rounded-2xl border border-dark-100 overflow-hidden hover:border-primary-200 hover:shadow-card transition-all duration-300 hover:-translate-y-0.5">
-      <div className="relative aspect-[16/10] overflow-hidden bg-dark-100">
-        <Link to={`/post/${post.slug}`} className="block absolute inset-0">
-          <img
-            src={pen}
-            alt={post.title}
-            loading="lazy"
-            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-          />
-        </Link>
-        <div className="absolute top-3 left-3 z-10">
-          <Link
-            to={`/category/${post.categorySlug}`}
-            className="inline-flex items-center px-3 py-1 rounded-full bg-white/95 backdrop-blur text-xs font-bold text-primary-700 border border-primary-100 shadow-soft hover:bg-primary-50 transition-colors"
-          >
-            {post.category}
-          </Link>
-        </div>
-        <div className="absolute inset-0 bg-gradient-to-t from-dark-900/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
-      </div>
+    <article className="group grid grid-cols-1 md:grid-cols-[280px_minmax(0,1fr)] lg:grid-cols-[320px_minmax(0,1fr)] gap-5 lg:gap-7 p-3 sm:p-4 lg:p-5 rounded-2xl bg-white border border-dark-100 hover:border-primary-200 hover:shadow-card transition-all duration-300">
+      
+      {/* Post Image */}
+      <Link
+        to={`/post/${post.slug}`}
+        className="relative block w-full aspect-[16/10] md:aspect-[4/3] overflow-hidden rounded-xl sm:rounded-2xl bg-dark-100"
+      >
+        <img
+          src={post.image}
+          alt={post.title}
+          loading="lazy"
+          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+        />
 
-      <div className="p-4 sm:p-5">
-        <h3 className="text-base sm:text-lg font-extrabold text-dark-900 leading-snug mb-2 group-hover:text-primary-700 transition-colors line-clamp-2">
-          <Link to={`/post/${post.slug}`}>{post.title}</Link>
-        </h3>
-        <p className="text-sm text-dark-600 leading-relaxed mb-4 line-clamp-3">
+        {post.category && (
+          <span className="absolute top-3 left-3 px-2.5 py-1 rounded-full bg-white/95 backdrop-blur text-[10px] sm:text-xs font-bold text-primary-700 border border-primary-100 shadow-soft">
+            {post.category}
+          </span>
+        )}
+      </Link>
+
+      {/* Post Content */}
+      <div className="flex flex-col justify-center min-w-0 py-1 sm:py-2 lg:py-3">
+
+        {/* Title */}
+        <Link to={`/post/${post.slug}`}>
+          <h3 className="text-lg sm:text-xl lg:text-2xl font-extrabold text-dark-900 leading-snug line-clamp-2 group-hover:text-primary-700 transition-colors">
+            {post.title}
+          </h3>
+        </Link>
+
+        {/* Description */}
+        <p className="mt-2 sm:mt-3 text-sm sm:text-base text-dark-600 leading-relaxed line-clamp-3">
           {post.description}
         </p>
 
-        <div className="flex items-center justify-between gap-2.5 sm:gap-3 pt-3 border-t border-dark-100 flex-wrap">
-          <div className="flex items-center gap-2.5 sm:gap-3 text-xs text-dark-500 flex-wrap min-w-0 flex-1">
-            <span className="inline-flex items-center gap-1.5 shrink-0 whitespace-nowrap">
-              <div className="w-5 h-5 rounded-full bg-gradient-to-br from-primary-400 to-primary-600 flex items-center justify-center text-white text-[9px] font-bold shrink-0">
+        {/* Meta Information */}
+        <div className="flex flex-wrap items-center gap-x-4 gap-y-2 mt-4 text-xs sm:text-sm text-dark-500">
+
+          {post.author && (
+            <span className="inline-flex items-center gap-1.5 font-medium">
+              <span className="flex items-center justify-center w-6 h-6 rounded-full bg-gradient-to-br from-primary-400 to-primary-600 text-white text-[10px] font-bold">
                 {post.author.charAt(0)}
-              </div>
-              <span className="font-medium truncate max-w-[70px] sm:max-w-[90px]">{post.author}</span>
+              </span>
+
+              <span>{post.author}</span>
             </span>
-            <span className="inline-flex items-center gap-1 shrink-0 whitespace-nowrap">
-              <Calendar size={12} className="shrink-0" />
+          )}
+
+          {post.date && (
+            <span className="inline-flex items-center gap-1.5">
+              <Calendar size={14} />
               <span>{post.date}</span>
             </span>
-            <span className="hidden sm:inline-flex items-center gap-1 shrink-0 whitespace-nowrap">
-              <Eye size={12} className="shrink-0" />
-              <span>{post.views?.toLocaleString()}</span>
+          )}
+
+          {post.views !== undefined && (
+            <span className="inline-flex items-center gap-1.5">
+              <Eye size={14} />
+              <span>{post.views.toLocaleString()} Views</span>
             </span>
-          </div>
+          )}
+        </div>
+
+        {/* Read More */}
+        <div className="mt-4 sm:mt-5">
           <Link
             to={`/post/${post.slug}`}
-            className="shrink-0 inline-flex items-center gap-1 text-xs font-bold text-primary-700 hover:text-primary-800 transition-colors whitespace-nowrap"
+            className="group/button inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-white text-sm font-bold shadow-glow hover:-translate-y-0.5 transition-all duration-200"
           >
-            বিস্তারিত
-            <ChevronRight size={14} className="group-hover:translate-x-0.5 transition-transform shrink-0" />
+            Read More
+
+            <ArrowRight
+              size={15}
+              className="group-hover/button:translate-x-1 transition-transform duration-200"
+            />
           </Link>
         </div>
       </div>

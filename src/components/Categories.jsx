@@ -9,7 +9,7 @@ export default function Categories() {
     <div className="bg-white rounded-2xl border border-dark-100 p-5 shadow-soft">
       <h3 className="text-sm font-extrabold text-dark-900 mb-4 flex items-center gap-2">
         <FolderOpen size={16} className="text-primary-600" />
-        ক্যাটাগরি
+        
       </h3>
       <ul className="space-y-1.5">
         {displayCats.map((cat) => (
