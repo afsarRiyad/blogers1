@@ -39,7 +39,7 @@ export default function FeaturedPost({ post }) {
           </div>
 
           <div className="absolute bottom-3 left-3 right-3 sm:bottom-4 sm:left-4 sm:right-4 lg:hidden">
-            <span className="inline-block px-2 py-0.5 rounded-md bg-white/90 backdrop-blur text-[10px] sm:text-[11px] font-bold text-primary-700 mb-1.5">
+            <span className="inline-block px-2 py-0.5 rounded-md tag-gradient text-white text-[10px] sm:text-[11px] font-bold shadow-glow mb-1.5">
               {post.category}
             </span>
           </div>
@@ -49,7 +49,7 @@ export default function FeaturedPost({ post }) {
           <div className="hidden lg:block mb-3 lg:mb-4">
             <Link
               to={`/category/${post.categorySlug}`}
-              className="inline-flex items-center px-2.5 sm:px-3 py-1 rounded-full bg-primary-50 text-[11px] sm:text-xs font-bold text-primary-700 border border-primary-100 hover:bg-primary-100 transition-colors"
+              className="inline-flex items-center px-2.5 sm:px-3 py-1 rounded-full tag-gradient text-white text-[11px] sm:text-xs font-bold shadow-glow transition-colors"
             >
               {post.category}
             </Link>

@@ -29,7 +29,7 @@ export default function PostGrid({ posts = [] }) {
             />
 
             {post.category && (
-              <span className="absolute top-3 left-3 px-2.5 py-1 rounded-full bg-white/90 backdrop-blur text-[10px] sm:text-xs font-bold text-primary-700 shadow-sm">
+              <span className="absolute top-3 left-3 px-2.5 py-1 rounded-full tag-gradient text-white text-[10px] sm:text-xs font-bold shadow-glow">
                 {post.category}
               </span>
             )}

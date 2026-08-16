@@ -19,6 +19,7 @@
     --error-color: #ef4444;
     --button-gradient-start: #0ea5e9;
     --button-gradient-end: #0369a1;
+    --button-text-color: #ffffff;
     --logo-color: #0ea5e9;
     --tag-color: #0ea5e9;
   }
@@ -61,31 +62,64 @@
     color: var(--text-primary) !important;
   }
 
+  /* Force body text to use secondary color */
+  p, .text-dark-600, .text-dark-700, .text-dark-800, .text-dark-900, .text-dark-500 {
+    color: var(--text-secondary) !important;
+  }
+
+  /* Force card descriptions to use secondary color */
+  .line-clamp-2, .line-clamp-3, .line-clamp-4 {
+    color: var(--text-secondary) !important;
+  }
+
+  /* Force text-primary-700 to use text-secondary */
+  .text-primary-700 {
+    color: var(--text-secondary) !important;
+  }
+
   /* Dynamic gradient utility */
   .btn-primary-gradient {
-    background: linear-gradient(to right, var(--primary-color), var(--primary-dark)) !important;
+    background: linear-gradient(to right, var(--button-gradient-start), var(--button-gradient-end)) !important;
+    color: white !important;
+  }
+
+  .btn-primary-gradient,
+  .bg-gradient-to-br-from-primary,
+  .bg-gradient-to-r-from-primary,
+  .logo-gradient,
+  .tag-gradient {
+    color: var(--button-text-color) !important;
   }
 
   .btn-primary-gradient:hover {
-    background: linear-gradient(to right, var(--primary-dark), var(--primary-color)) !important;
+    background: linear-gradient(to right, var(--button-gradient-end), var(--button-gradient-start)) !important;
+    color: white !important;
   }
 
   /* Dynamic gradient backgrounds */
   .bg-gradient-to-br-from-primary {
-    background: linear-gradient(to bottom right, var(--primary-color), var(--primary-dark)) !important;
+    background: linear-gradient(to bottom right, var(--button-gradient-start), var(--button-gradient-end)) !important;
   }
 
   .bg-gradient-to-r-from-primary {
-    background: linear-gradient(to right, var(--primary-color), var(--primary-dark)) !important;
+    background: linear-gradient(to right, var(--button-gradient-start), var(--button-gradient-end)) !important;
   }
 
   /* Dynamic logo color */
   .logo-gradient {
+    background: linear-gradient(to bottom right, var(--logo-color), var(--logo-color)) !important;
+  }
+
+  .logo-gradient:hover {
     background: linear-gradient(to bottom right, var(--logo-color), var(--primary-dark)) !important;
   }
 
   /* Dynamic tag color */
   .tag-gradient {
+    background: linear-gradient(to right, var(--tag-color), var(--tag-color)) !important;
+  }
+
+  .tag-gradient:hover {
     background: linear-gradient(to right, var(--tag-color), var(--primary-dark)) !important;
   }
 
@@ -105,6 +139,15 @@
 
   .text-muted {
     color: var(--text-muted) !important;
+  }
+
+  /* Dynamic hover states */
+  .hover-text-primary:hover {
+    color: var(--primary-color) !important;
+  }
+
+  .hover-bg-primary-50:hover {
+    background-color: var(--primary-light) !important;
   }
 }
 

@@ -58,14 +58,19 @@ export const ColorProvider = ({ children }) => {
     root.style.setProperty('--success-color', colorValues.success_color);
     root.style.setProperty('--warning-color', colorValues.warning_color);
     root.style.setProperty('--error-color', colorValues.error_color);
-    root.style.setProperty('--button-gradient-start', colorValues.button_gradient_start);
-    root.style.setProperty('--button-gradient-end', colorValues.button_gradient_end);
+    root.style.setProperty('--button-gradient-start', colorValues.button_gradient_start || colorValues.primary_color);
+    root.style.setProperty('--button-gradient-end', colorValues.button_gradient_end || colorValues.primary_dark);
+    root.style.setProperty('--button-text-color', colorValues.button_text_color || '#ffffff');
     root.style.setProperty('--logo-color', colorValues.logo_color || colorValues.primary_color);
     root.style.setProperty('--tag-color', colorValues.tag_color || colorValues.primary_color);
 
     // Verify CSS variables were set
     const primaryColor = getComputedStyle(root).getPropertyValue('--primary-color');
+    const logoColor = getComputedStyle(root).getPropertyValue('--logo-color');
+    const buttonGradientStart = getComputedStyle(root).getPropertyValue('--button-gradient-start');
     console.log('Primary color after setting:', primaryColor);
+    console.log('Logo color after setting:', logoColor);
+    console.log('Button gradient start after setting:', buttonGradientStart);
     console.log('CSS variables set successfully');
   };
 
@@ -124,6 +129,8 @@ export const ColorProvider = ({ children }) => {
       const defaultColors = colorSettingsService.getDefaultColors();
       await colorSettingsService.updateMultiple(defaultColors);
       setColors(defaultColors);
+      localStorage.setItem('siteColors', JSON.stringify(defaultColors));
+      applyColorsToCSS(defaultColors);
     } catch (error) {
       console.error('Error resetting colors:', error);
       throw error;

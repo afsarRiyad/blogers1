@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import Google from '../images/google-logo.webp'
 import {
   Send,
   Facebook,
@@ -17,31 +18,27 @@ export default function Footer() {
 
           {/* Logo & About */}
           <div>
-            <Link to="/" className="inline-flex items-center gap-2.5 mb-4">
-              <div className="relative w-11 h-11 rounded-xl bg-gradient-to-br-from-primary flex items-center justify-center shadow-glow">
-                <svg
-                  viewBox="0 0 24 24"
-                  className="w-5 h-5 text-white"
-                  fill="currentColor"
-                >
-                  <path d="M8 5v14l11-7z" />
-                </svg>
-
-                <span className="absolute -top-1 -right-1 text-[8px] font-extrabold bg-dark-900 text-white px-1 py-0.5 rounded-md">
-                  BD
-                </span>
-              </div>
-
-              <div className="flex flex-col leading-none">
-                <span className="text-xl font-extrabold tracking-tight text-dark-900">
-                  Tech<span className="text-primary-600">Zone</span>
-                </span>
-
-                <span className="text-[10px] text-dark-500 font-medium mt-1">
-                  Technology · APK · AI
-                </span>
-              </div>
-            </Link>
+            {/* Logo - Center */}
+                     <Link
+                       to="/"
+                       className="flex items-center gap-2 group"
+                       aria-label="TechZone BD Home"
+                     >
+                       <div className="relative w-9 h-9 sm:w-10 sm:h-10 rounded-xl logo-gradient flex items-center justify-center shadow-glow transition-transform group-hover:scale-105">
+                        <img src={Google} alt="logo" className='object-cover h-full' />
+           
+                         <span className="absolute -top-1 -right-1 text-[8px] sm:text-[9px] font-extrabold bg-dark-900 text-white px-1 py-0.5 rounded-md leading-none">
+                           27
+                         </span>
+                       </div>
+           
+                       <div className="flex flex-col leading-none">
+                         <span className="text-base sm:text-lg font-extrabold tracking-tight text-dark-900 whitespace-nowrap">
+                           <span className="text-primary-600">Google</span>
+                         </span>
+           
+                       </div>
+                     </Link>
 
             <p className="text-sm text-dark-600 leading-relaxed max-w-md">
               TechZone BD is a modern technology platform featuring APK,

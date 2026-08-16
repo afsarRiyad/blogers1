@@ -43,6 +43,7 @@ const colorGroups = [
       { key: 'border_color', label: 'Border Color', description: 'Borders and dividers' },
       { key: 'button_gradient_start', label: 'Button Gradient Start', description: 'Button gradient start color' },
       { key: 'button_gradient_end', label: 'Button Gradient End', description: 'Button gradient end color' },
+      { key: 'button_text_color', label: 'Button Text Color', description: 'Text color on buttons' },
     ]
   }
 ];
@@ -203,10 +204,22 @@ export default function ColorSettings() {
         <div className="space-y-4">
           {/* Button Preview */}
           <div className="flex items-center gap-4">
-            <button className="px-6 py-3 rounded-xl bg-gradient-to-r-from-primary text-white font-bold shadow-lg">
+            <button
+              className="px-6 py-3 rounded-xl font-bold shadow-lg"
+              style={{
+                background: `linear-gradient(to right, ${localColors.button_gradient_start || colors.button_gradient_start || localColors.primary_color || colors.primary_color}, ${localColors.button_gradient_end || colors.button_gradient_end || localColors.primary_dark || colors.primary_dark})`,
+                color: localColors.button_text_color || colors.button_text_color || '#ffffff'
+              }}
+            >
               Primary Button
             </button>
-            <button className="px-6 py-3 rounded-xl border border-dark-200 text-dark-700 font-medium hover:bg-dark-50">
+            <button
+              className="px-6 py-3 rounded-xl border font-medium hover:bg-dark-50"
+              style={{
+                borderColor: localColors.border_color || colors.border_color,
+                color: localColors.text_secondary || colors.text_secondary
+              }}
+            >
               Secondary Button
             </button>
           </div>
@@ -240,20 +253,25 @@ export default function ColorSettings() {
           {/* Color Swatches */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3 pt-4 border-t border-dark-200">
             <div className="text-center">
-              <div className="w-full h-12 rounded-lg mb-2" style={{ backgroundColor: localColors.primary_color || colors.primary_color }}></div>
-              <p className="text-xs text-dark-600">Primary</p>
+              <div
+                className="w-full h-12 rounded-lg mb-2"
+                style={{
+                  background: `linear-gradient(to right, ${localColors.button_gradient_start || colors.button_gradient_start || localColors.primary_color || colors.primary_color}, ${localColors.button_gradient_end || colors.button_gradient_end || localColors.primary_dark || colors.primary_dark})`
+                }}
+              ></div>
+              <p className="text-xs text-dark-600">Button Gradient</p>
+            </div>
+            <div className="text-center">
+              <div className="w-full h-12 rounded-lg mb-2" style={{ backgroundColor: localColors.logo_color || colors.logo_color }}></div>
+              <p className="text-xs text-dark-600">Logo</p>
+            </div>
+            <div className="text-center">
+              <div className="w-full h-12 rounded-lg mb-2" style={{ backgroundColor: localColors.tag_color || colors.tag_color }}></div>
+              <p className="text-xs text-dark-600">Tag</p>
             </div>
             <div className="text-center">
               <div className="w-full h-12 rounded-lg mb-2" style={{ backgroundColor: localColors.secondary_color || colors.secondary_color }}></div>
               <p className="text-xs text-dark-600">Secondary</p>
-            </div>
-            <div className="text-center">
-              <div className="w-full h-12 rounded-lg mb-2" style={{ backgroundColor: localColors.success_color || colors.success_color }}></div>
-              <p className="text-xs text-dark-600">Success</p>
-            </div>
-            <div className="text-center">
-              <div className="w-full h-12 rounded-lg mb-2" style={{ backgroundColor: localColors.error_color || colors.error_color }}></div>
-              <p className="text-xs text-dark-600">Error</p>
             </div>
           </div>
         </div>

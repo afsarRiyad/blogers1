@@ -26,7 +26,7 @@ export default function PostCard({ post, variant = 'default' }) {
             className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105 animate-fade-in"
           />
           {post.category && (
-            <span className="absolute top-2 left-2 px-2 py-1 rounded-full bg-white/95 backdrop-blur text-[10px] font-bold text-primary-700 border border-primary-100 shadow-soft">
+            <span className="absolute top-2 left-2 px-2 py-1 rounded-full tag-gradient text-white text-[10px] font-bold shadow-glow">
               {post.category}
             </span>
           )}
@@ -76,7 +76,7 @@ export default function PostCard({ post, variant = 'default' }) {
         />
 
         {post.category && (
-          <span className="absolute top-3 left-3 px-2.5 py-1 rounded-full bg-white/95 backdrop-blur text-[10px] sm:text-xs font-bold text-primary-700 border border-primary-100 shadow-soft">
+          <span className="absolute top-3 left-3 px-2.5 py-1 rounded-full tag-gradient text-white text-[10px] sm:text-xs font-bold shadow-glow">
             {post.category}
           </span>
         )}

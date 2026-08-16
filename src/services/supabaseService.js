@@ -83,6 +83,7 @@ export const colorSettingsService = {
       error_color: '#ef4444',
       button_gradient_start: '#0ea5e9',
       button_gradient_end: '#0369a1',
+      button_text_color: '#ffffff',
       logo_color: '#0ea5e9',
       tag_color: '#0ea5e9'
     };
