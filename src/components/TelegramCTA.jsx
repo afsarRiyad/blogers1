@@ -62,7 +62,7 @@ const socialLinks = [
 
 export default function TelegramCTA() {
   return (
-    <div className= " bg-white rounded-2xl border border-dark-100 p-5 shadow-soft">
+    <div className="bg-white rounded-2xl border border-dark-100 p-5 shadow-soft overflow-hidden">
       <div className="mb-4">
         <h3 className="text-base text-[18px] font-extrabold text-dark-900">
           Follow Us

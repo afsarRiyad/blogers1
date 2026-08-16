@@ -6,21 +6,45 @@ import PostGrid from '../components/PostGrid.jsx';
 import Sidebar from '../components/Sidebar.jsx';
 import TelegramCTA from '../components/TelegramCTA.jsx';
 import PopularPosts from '../components/PopularPosts.jsx';
-import { searchPosts } from '../data/posts.js';
+import { searchPosts } from '../data/postsSupabase.js';
 
 export default function SearchResults() {
   const [params] = useSearchParams();
   const q = params.get('q') || '';
   const [results, setResults] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    setResults(searchPosts(q));
+    async function loadResults() {
+      try {
+        const searchResults = await searchPosts(q);
+        setResults(searchResults);
+      } catch (error) {
+        console.error('Error searching posts:', error);
+      } finally {
+        setLoading(false);
+      }
+    }
+    loadResults();
   }, [q]);
+
+  if (loading) {
+    return (
+      <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8 py-5 sm:py-7 md:py-8 lg:py-10">
+        <div className="flex items-center justify-center min-h-[400px]">
+          <div className="text-center">
+            <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-primary-500 border-t-transparent"></div>
+            <p className="mt-4 text-dark-600">Searching...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8 py-5 sm:py-7 md:py-8 lg:py-10">
       <div className="mb-4 sm:mb-5 md:mb-7">
-        <Breadcrumb items={[{ label: `সার্চ ফলাফল: "${q}"` }]} />
+        <Breadcrumb items={[{ label: `Search results: "${q}"` }]} />
       </div>
 
       <div className="relative overflow-hidden rounded-2xl sm:rounded-3xl bg-gradient-to-br from-dark-900 via-dark-800 to-dark-900 p-4 sm:p-6 lg:p-10 mb-5 sm:mb-6 md:mb-8 lg:mb-9 shadow-card">
@@ -33,7 +57,7 @@ export default function SearchResults() {
           <div className="flex-1 min-w-0">
             <p className="text-[11px] sm:text-xs lg:text-sm font-bold uppercase tracking-wider text-primary-300 mb-0.5 sm:mb-1">Search Results</p>
             <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-extrabold tracking-tight leading-tight mb-1 sm:mb-1.5 break-words">
-              <span className="break-all">"{q}"</span> — খুঁজে পাওয়া ফলাফল
+              <span className="break-all">"{q}"</span> — All matched results
             </h1>
             <p className="text-xs sm:text-sm lg:text-base text-white/80 leading-relaxed max-w-2xl">
               মোট <span className="font-extrabold text-primary-300">{results.length} টি</span> পোস্ট আপনার সার্চ শব্দের সাথে মেলেছে।
@@ -48,7 +72,7 @@ export default function SearchResults() {
             <section>
               <div className="flex items-center justify-between gap-3 mb-4 sm:mb-5">
                 <h2 className="text-lg sm:text-xl lg:text-2xl font-extrabold tracking-tight text-dark-900">
-                  সমস্ত ফলাফল
+                  All Results
                 </h2>
                 <span className="text-[11px] sm:text-xs font-bold text-dark-500 px-2.5 sm:px-3 py-1 rounded-full bg-dark-100 whitespace-nowrap">
                   {results.length} টি
@@ -62,7 +86,7 @@ export default function SearchResults() {
                 <Search size={30} className="sm:size-9" />
               </div>
               <h3 className="text-lg sm:text-xl font-extrabold text-dark-900 mb-2">
-                কোনো পোস্ট পাওয়া যায়নি 😔
+                No Results Found 😔
               </h3>
               <p className="text-sm text-dark-600 mb-6 max-w-md mx-auto leading-relaxed">
                 "<span className="font-bold text-dark-800 break-all">{q}</span>" -এর জন্য কোনো ফলাফল পাওয়া যায়নি। অন্য কিছু সার্চ করে দেখুন অথবা হোম পেজে যান।
@@ -73,7 +97,7 @@ export default function SearchResults() {
                   className="inline-flex items-center gap-1.5 px-5 py-2.5 rounded-xl bg-gradient-to-r from-primary-500 to-primary-700 text-white font-bold text-sm hover:-translate-y-0.5 transition-all shadow-glow w-full sm:w-auto justify-center"
                 >
                   <Home size={15} />
-                  হোমে ফিরুন
+                  Go to Home
                 </Link>
               </div>
               <div className="mt-8 sm:mt-10 text-left max-w-lg mx-auto">
@@ -87,7 +111,7 @@ export default function SearchResults() {
           </div>
         </div>
 
-        <div className="lg:sticky lg:top-24 lg:self-start lg:h-fit">
+        <div className="lg:sticky lg:top-24 lg:self-start lg:h-fit order-2">
           <Sidebar />
         </div>
       </div>

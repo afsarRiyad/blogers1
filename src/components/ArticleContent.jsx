@@ -7,7 +7,6 @@ export default function ArticleContent({ blocks = [] }) {
       {blocks.map((block, index) => {
         const key = block._k || `block-${index}`;
 
-        // Normal paragraph
         if (block.type === 'p') {
           return (
             <p
@@ -19,18 +18,16 @@ export default function ArticleContent({ blocks = [] }) {
           );
         }
 
-        // AI Prompt
         if (block.type === 'prompt') {
           return (
             <PromptBox
               key={key}
               text={block.text}
-              label={block.label || 'AI Prompt'}
+              label={block.label || 'Prompt'}
             />
           );
         }
 
-        // Everything else will be hidden
         return null;
       })}
 

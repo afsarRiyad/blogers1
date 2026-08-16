@@ -1,28 +1,66 @@
 import { Link } from 'react-router-dom';
 import { Lightbulb } from 'lucide-react';
 import PostCard from './PostCard.jsx';
-import { getRelatedPosts } from '../data/posts.js';
+import { getRelatedPosts } from '../data/postsSupabase.js';
+import { useState, useEffect } from 'react';
 
 export default function RelatedPosts({ currentSlug, limit = 3 }) {
-  const posts = getRelatedPosts(currentSlug, limit);
+  const [posts, setPosts] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function loadRelatedPosts() {
+      try {
+        const relatedPosts = await getRelatedPosts(currentSlug, limit);
+        setPosts(relatedPosts);
+      } catch (error) {
+        console.error('Error loading related posts:', error);
+      } finally {
+        setLoading(false);
+      }
+    }
+    loadRelatedPosts();
+  }, [currentSlug, limit]);
+
+  if (loading) {
+    return (
+      <section className="mt-12 sm:mt-16 pt-8 sm:pt-10 border-t border-dark-100">
+        <div className="flex items-center gap-3 sm:gap-4 mb-6 sm:mb-8">
+          <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-gradient-to-br from-primary-500 to-primary-600 flex items-center justify-center text-white shadow-lg shrink-0">
+            <Lightbulb size={18} className="sm:w-6 sm:h-6" />
+          </div>
+          <div>
+            <h3 className="text-lg sm:text-2xl font-extrabold tracking-tight text-dark-900">
+              Related Posts
+            </h3>
+            <p className="text-xs sm:text-sm text-dark-500 mt-1">You might also like these posts</p>
+          </div>
+        </div>
+        <div className="flex items-center justify-center py-8">
+          <div className="inline-block animate-spin rounded-full h-8 w-8 border-3 border-primary-500 border-t-transparent"></div>
+        </div>
+      </section>
+    );
+  }
+
   if (!posts.length) return null;
 
   return (
-    <section className="mt-10 sm:mt-12 pt-8 sm:pt-10 border-t border-dark-100">
-      <div className="flex items-center gap-2 sm:gap-2.5 mb-4 sm:mb-6">
-        <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-primary-50 border border-primary-100 flex items-center justify-center text-primary-600 shrink-0">
-          <Lightbulb size={15} className="sm:w-[18px] sm:h-[18px]" />
+    <section className="mt-12 sm:mt-16 pt-8 sm:pt-10 border-t border-dark-100">
+      <div className="flex items-center gap-3 sm:gap-4 mb-6 sm:mb-8">
+        <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-gradient-to-br from-primary-500 to-primary-600 flex items-center justify-center text-white shadow-lg shrink-0">
+          <Lightbulb size={18} className="sm:w-6 sm:h-6" />
         </div>
         <div>
-          <h3 className="text-base sm:text-xl font-extrabold tracking-tight text-dark-900">
-            আপনার জন্য আরও পোস্ট
+          <h3 className="text-lg sm:text-2xl font-extrabold tracking-tight text-dark-900">
+            Related Posts
           </h3>
-          <p className="text-[11px] sm:text-xs text-dark-500 mt-0.5 hidden sm:block">এই পোস্টগুলোও আপনার পছন্দ হতে পারে</p>
+          <p className="text-xs sm:text-sm text-dark-500 mt-1">You might also like these posts</p>
         </div>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-3.5 sm:gap-5">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
         {posts.map((p) => (
-          <PostCard key={p.id} post={p} />
+          <PostCard key={p.id} post={p} variant="compact" />
         ))}
       </div>
     </section>

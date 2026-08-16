@@ -4,30 +4,42 @@ import { Calendar, Eye, ArrowRight } from 'lucide-react';
 export default function PostCard({ post, variant = 'default' }) {
   if (!post) return null;
 
-  // Compact version — used for sidebar / small post lists
   if (variant === 'compact') {
     return (
       <Link
         to={`/post/${post.slug}`}
-        className="group flex gap-3 p-3 rounded-xl bg-white border border-dark-100 hover:border-primary-200 hover:shadow-soft transition-all duration-200"
+        className="group flex flex-col gap-3 p-4 rounded-2xl bg-white border border-dark-100 hover:border-primary-200 hover:shadow-lg transition-all duration-300"
       >
-        <div className="relative shrink-0 w-20 h-20 rounded-lg overflow-hidden bg-dark-100">
+        <div className="relative shrink-0 w-full aspect-[16/10] rounded-xl overflow-hidden bg-dark-100">
           <img
             src={post.image}
             alt={post.title}
             loading="lazy"
-            className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
+            className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105 animate-fade-in"
           />
+          {post.category && (
+            <span className="absolute top-2 left-2 px-2 py-1 rounded-full bg-white/95 backdrop-blur text-[10px] font-bold text-primary-700 border border-primary-100 shadow-soft">
+              {post.category}
+            </span>
+          )}
         </div>
 
-        <div className="flex-1 min-w-0 flex flex-col justify-center">
-          <h4 className="text-sm font-bold text-dark-900 group-hover:text-primary-700 transition-colors line-clamp-2 leading-snug">
+        <div className="flex-1 min-w-0">
+          <h4 className="text-sm font-bold text-dark-900 group-hover:text-primary-700 transition-colors line-clamp-2 leading-snug mb-2">
             {post.title}
           </h4>
 
-          <div className="flex items-center gap-1.5 mt-2 text-xs text-dark-500">
-            <Calendar size={11} />
-            <span>{post.date}</span>
+          <div className="flex items-center justify-between gap-2 text-xs text-dark-500">
+            <div className="flex items-center gap-1.5">
+              <Calendar size={12} />
+              <span>{post.date}</span>
+            </div>
+            {post.views !== undefined && (
+              <div className="flex items-center gap-1.5">
+                <Eye size={12} />
+                <span>{post.views.toLocaleString()}</span>
+              </div>
+            )}
           </div>
         </div>
       </Link>
@@ -46,7 +58,7 @@ export default function PostCard({ post, variant = 'default' }) {
           src={post.image}
           alt={post.title}
           loading="lazy"
-          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 animate-fade-in"
         />
 
         {post.category && (

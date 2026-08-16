@@ -5,7 +5,8 @@ import PostGrid from '../components/PostGrid.jsx';
 import Sidebar from '../components/Sidebar.jsx';
 import TelegramCTA from '../components/TelegramCTA.jsx';
 
-import { categories, getPostsByCategory, posts } from '../data/posts.js';
+import { getCategories, getPostsByCategory, getPosts, getCategoryPostCount } from '../data/postsSupabase.js';
+import { useState, useEffect, useRef } from 'react';
 
 const colorMap = {
   apps: 'from-sky-400 to-blue-600',
@@ -20,11 +21,101 @@ const colorMap = {
 
 export default function Category() {
   const { slug } = useParams();
+  const [categories, setCategories] = useState([]);
+  const [allPosts, setAllPosts] = useState([]);
+  const [totalPosts, setTotalPosts] = useState(0);
+  const [loading, setLoading] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
+  const [offset, setOffset] = useState(0);
+  const POSTS_PER_PAGE = 15;
+  const observerTarget = useRef(null);
+
+  const loadPosts = async (currentOffset = 0, reset = false) => {
+    try {
+      const data = await getPostsByCategory(slug, currentOffset, POSTS_PER_PAGE);
+      
+      if (reset) {
+        setAllPosts(data);
+      } else {
+        setAllPosts(prev => [...prev, ...data]);
+      }
+      
+      setHasMore(data.length === POSTS_PER_PAGE);
+      return data;
+    } catch (error) {
+      console.error('Error loading posts:', error);
+      return [];
+    }
+  };
+
+  useEffect(() => {
+    async function loadData() {
+      try {
+        const [catsData, count] = await Promise.all([
+          getCategories(),
+          getCategoryPostCount(slug)
+        ]);
+        setCategories(catsData);
+        setTotalPosts(count);
+        
+        const postsData = await loadPosts(0, true);
+        setOffset(postsData.length);
+      } catch (error) {
+        console.error('Error loading category data:', error);
+      } finally {
+        setLoading(false);
+      }
+    }
+    loadData();
+  }, [slug]);
+
+  const loadMore = async () => {
+    if (loadingMore || !hasMore) return;
+    
+    setLoadingMore(true);
+    const newPosts = await loadPosts(offset, false);
+    setOffset(prev => prev + newPosts.length);
+    setLoadingMore(false);
+  };
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && hasMore && !loadingMore) {
+          loadMore();
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    if (observerTarget.current) {
+      observer.observe(observerTarget.current);
+    }
+
+    return () => {
+      if (observerTarget.current) {
+        observer.unobserve(observerTarget.current);
+      }
+    };
+  }, [hasMore, loadingMore, offset]);
+
   const catInfo = categories.find((c) => c.slug === slug);
-  const categoryPosts = getPostsByCategory(slug);
-  const allPosts = categoryPosts.length ? categoryPosts : posts.slice(0, 8);
   const name = catInfo?.name || (slug ? slug.replace(/-/g, ' ') : 'Category');
   const color = colorMap[slug] || 'from-primary-400 to-primary-700';
+
+  if (loading) {
+    return (
+      <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8 py-5 sm:py-7 md:py-8 lg:py-10">
+        <div className="flex items-center justify-center min-h-[400px]">
+          <div className="text-center">
+            <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-primary-500 border-t-transparent"></div>
+            <p className="mt-4 text-dark-600">Loading category...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8 py-5 sm:py-7 md:py-8 lg:py-10">
@@ -50,7 +141,7 @@ export default function Category() {
           </div>
           <div className="flex items-center gap-2 sm:gap-3 shrink-0 w-full sm:w-auto justify-between sm:justify-end">
             <div className="text-right">
-              <p className="text-xl sm:text-2xl lg:text-3xl font-extrabold">{(catInfo?.count || allPosts.length)}</p>
+              <p className="text-xl sm:text-2xl lg:text-3xl font-extrabold">{(catInfo?.count || totalPosts || allPosts.length)}</p>
               <p className="text-[10px] sm:text-xs text-white/80 font-bold uppercase">পোস্ট</p>
             </div>
           </div>
@@ -66,10 +157,20 @@ export default function Category() {
                   {name} — সমস্ত পোস্ট
                 </h2>
                 <span className="text-[11px] sm:text-xs font-bold text-dark-500 px-2.5 sm:px-3 py-1 rounded-full bg-dark-100 whitespace-nowrap">
-                  {allPosts.length} টি পোস্ট
+                  {totalPosts || allPosts.length} টি পোস্ট
                 </span>
               </div>
               <PostGrid posts={allPosts} columns={2} />
+              
+              {hasMore && (
+                <div ref={observerTarget} className="flex items-center justify-center py-8">
+                  {loadingMore ? (
+                    <div className="inline-block animate-spin rounded-full h-8 w-8 border-3 border-primary-500 border-t-transparent"></div>
+                  ) : (
+                    <p className="text-sm text-dark-500">Scroll to load more...</p>
+                  )}
+                </div>
+              )}
             </section>
           ) : (
             <div className="bg-white rounded-2xl border border-dark-100 p-6 sm:p-8 lg:p-10 text-center shadow-soft">
@@ -88,13 +189,12 @@ export default function Category() {
             </div>
           )}
 
-          <CategorySection />
           <div className="lg:hidden">
             <TelegramCTA />
           </div>
         </div>
 
-        <div className="lg:sticky lg:top-24 lg:self-start lg:h-fit">
+        <div className="lg:sticky lg:top-24 lg:self-start lg:h-fit order-2">
           <Sidebar />
         </div>
       </div>

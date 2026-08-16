@@ -18,7 +18,7 @@ export default function FeaturedPost({ post }) {
           <img
             src={pic}
             alt={post.title}
-            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 animate-fade-in"
           />
 
           <div className="absolute inset-0 bg-gradient-to-r from-dark-900/60 via-dark-900/20 to-transparent lg:bg-gradient-to-t lg:from-dark-900/70 lg:via-dark-900/10 lg:to-transparent" />

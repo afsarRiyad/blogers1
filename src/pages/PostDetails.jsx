@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, Navigate, useParams } from 'react-router-dom';
 import {
   Calendar,
@@ -11,25 +11,56 @@ import {
 } from 'lucide-react';
 
 import Breadcrumb from '../components/Breadcrumb.jsx';
-import ArticleContent from '../components/ArticleContent.jsx';
+
 import RelatedPosts from '../components/RelatedPosts.jsx';
 import Comments from '../components/Comments.jsx';
 import Sidebar from '../components/Sidebar.jsx';
 import TelegramCTA from '../components/TelegramCTA.jsx';
 
-import { getPostBySlug } from '../data/posts.js';
+import { getPostBySlug, incrementPostViews } from '../data/postsSupabase.js';
 
 export default function PostDetails() {
   const { slug } = useParams();
-  const post = getPostBySlug(slug);
+  const [post, setPost] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function loadPost() {
+      try {
+        const postData = await getPostBySlug(slug);
+        setPost(postData);
+        
+        if (postData?.id) {
+          await incrementPostViews(postData.id);
+        }
+      } catch (error) {
+        console.error('Error loading post:', error);
+      } finally {
+        setLoading(false);
+      }
+    }
+    loadPost();
+  }, [slug]);
 
   const [copied, setCopied] = useState(false);
+
+  if (loading) {
+    return (
+      <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-5 sm:py-8 lg:py-10">
+        <div className="flex items-center justify-center min-h-[400px]">
+          <div className="text-center">
+            <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-primary-500 border-t-transparent"></div>
+            <p className="mt-4 text-dark-600">Loading post...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   if (!post) {
     return <Navigate to="/" replace />;
   }
 
-  // Supports prompt from posts.js
   const prompt = post.prompt || '';
 
   const copyPrompt = async () => {
@@ -83,26 +114,25 @@ export default function PostDetails() {
           {/* Article Header */}
           <header className="mb-5 sm:mb-8">
 
-          
-
             <h1 className="text-xl sm:text-2xl lg:text-4xl font-extrabold tracking-tight text-dark-900 leading-[1.25] mb-4 sm:mb-5 text-balance">
               {post.title}
             </h1>
 
-           
           </header>
 
           {/* =========================
               FEATURE IMAGE
-              Nothing is placed over image
           ========================== */}
           <div className="mb-5 sm:mb-8 rounded-2xl overflow-hidden border border-dark-100 shadow-card bg-dark-50">
-            <img
-              src={post.image}
-              alt={post.title}
-              loading="lazy"
-              className="w-full h-auto object-cover aspect-[16/9]"
-            />
+            <div className="relative group overflow-hidden">
+              <img
+                src={post.image}
+                alt={post.title}
+                loading="lazy"
+                className="w-full h-auto object-cover aspect-[16/9] transition-transform duration-700 ease-out group-hover:scale-105 animate-fade-in"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-dark-900/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+            </div>
           </div>
 
           {/* =========================
@@ -110,20 +140,13 @@ export default function PostDetails() {
           ========================== */}
           <div className="bg-white rounded-2xl border border-dark-100 p-4 sm:p-6 lg:p-8 shadow-soft">
 
-            <ArticleContent
-              blocks={post.content || []}
-            />
-
-            {/* =========================
-                AI PROMPT
-            ========================== */}
             {prompt && (
-              <section className="mt-8 sm:mt-10 pt-7 sm:pt-9 border-t border-dark-100">
+              <section className=" pt-2 sm:pt-3 border-t border-dark-100">
 
                 <div className="mb-4 sm:mb-5">
 
                   <span className="inline-flex items-center px-3 py-1 rounded-full bg-primary-50 border border-primary-100 text-[10px] sm:text-xs font-bold text-primary-700 uppercase tracking-wider">
-                    AI Prompt
+                    Prompt
                   </span>
 
                   <h2 className="mt-2.5 text-xl sm:text-2xl lg:text-3xl font-extrabold text-dark-900">
@@ -131,7 +154,7 @@ export default function PostDetails() {
                   </h2>
 
                   <p className="mt-1.5 text-xs sm:text-sm text-dark-500">
-                    Copy the prompt below and use it with your preferred AI tool.
+                    Copy the prompt below and use it.
                   </p>
 
                 </div>
@@ -145,7 +168,7 @@ export default function PostDetails() {
                       <div className="w-2 h-2 rounded-full bg-primary-500 shrink-0" />
 
                       <span className="text-xs sm:text-sm font-bold text-dark-700 truncate">
-                        AI Generation Prompt
+                        Generation Prompt
                       </span>
                     </div>
 

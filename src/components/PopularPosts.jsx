@@ -1,12 +1,42 @@
 import { Link } from 'react-router-dom';
 import { TrendingUp } from 'lucide-react';
-import { getPopularPosts } from '../data/posts.js';
+import { getPopularPosts } from '../data/postsSupabase.js';
+import { useState, useEffect } from 'react';
 
 export default function PopularPosts({ limit = 5 }) {
-  const posts = getPopularPosts(limit);
+  const [posts, setPosts] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function loadPopularPosts() {
+      try {
+        const popularPosts = await getPopularPosts(limit);
+        setPosts(popularPosts);
+      } catch (error) {
+        console.error('Error loading popular posts:', error);
+      } finally {
+        setLoading(false);
+      }
+    }
+    loadPopularPosts();
+  }, [limit]);
+
+  if (loading) {
+    return (
+      <div className="bg-white rounded-2xl border border-dark-100 p-5 shadow-soft">
+        <h3 className="text-sm font-extrabold text-dark-900 mb-4 flex items-center gap-2">
+          <TrendingUp size={16} className="text-primary-600" />
+          Popular Posts
+        </h3>
+        <div className="flex items-center justify-center py-4">
+          <div className="inline-block animate-spin rounded-full h-6 w-6 border-2 border-primary-500 border-t-transparent"></div>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className="bg-white rounded-2xl border border-dark-100 p-5 shadow-soft">
+    <div className="bg-white rounded-2xl border border-dark-100 p-5 shadow-soft overflow-hidden">
       <h3 className="text-sm font-extrabold text-dark-900 mb-4 flex items-center gap-2">
         <TrendingUp size={16} className="text-primary-600" />
         Popular Posts

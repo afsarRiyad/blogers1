@@ -23,7 +23,7 @@ export default function Contact() {
   return (
     <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8 py-5 sm:py-7 md:py-8 lg:py-10">
       <div className="mb-4 sm:mb-5 md:mb-7">
-        <Breadcrumb items={[{ label: 'যোগাযোগ করুন' }]} />
+        <Breadcrumb items={[{ label: 'Contact us' }]} />
       </div>
 
       <section className="relative overflow-hidden rounded-2xl sm:rounded-3xl bg-gradient-to-br from-primary-600 via-primary-700 to-primary-900 p-5 sm:p-8 lg:p-12 xl:p-14 mb-6 sm:mb-8 md:mb-9 lg:mb-10 shadow-card text-white">
