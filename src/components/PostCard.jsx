@@ -1,6 +1,14 @@
 import { Link } from 'react-router-dom';
 import { Calendar, Eye, ArrowRight } from 'lucide-react';
 
+const stripHtml = (html) => {
+  if (!html) return '';
+  const tmp = document.createElement('div');
+  tmp.innerHTML = html;
+  const text = tmp.textContent || tmp.innerText || '';
+  return text.trim();
+};
+
 export default function PostCard({ post, variant = 'default' }) {
   if (!post) return null;
 
@@ -28,6 +36,12 @@ export default function PostCard({ post, variant = 'default' }) {
           <h4 className="text-sm font-bold text-dark-900 group-hover:text-primary-700 transition-colors line-clamp-2 leading-snug mb-2">
             {post.title}
           </h4>
+
+          {post.description && (
+            <p className="text-xs text-dark-600 leading-relaxed line-clamp-2 mb-2">
+              {stripHtml(post.description)}
+            </p>
+          )}
 
           <div className="flex items-center justify-between gap-2 text-xs text-dark-500">
             <div className="flex items-center gap-1.5">
@@ -79,8 +93,8 @@ export default function PostCard({ post, variant = 'default' }) {
         </Link>
 
         {/* Description */}
-        <p className="mt-2 sm:mt-3 text-sm sm:text-base text-dark-600 leading-relaxed line-clamp-3">
-          {post.description}
+        <p className="mt-2 sm:mt-3 text-sm sm:text-base text-dark-600 leading-relaxed line-clamp-2">
+          {stripHtml(post.description)}
         </p>
 
         {/* Meta Information */}
@@ -115,7 +129,7 @@ export default function PostCard({ post, variant = 'default' }) {
         <div className="mt-4 sm:mt-5">
           <Link
             to={`/post/${post.slug}`}
-            className="group/button inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-white text-sm font-bold shadow-glow hover:-translate-y-0.5 transition-all duration-200"
+            className="group/button inline-flex items-center gap-2 px-5 py-2.5 rounded-full btn-primary-gradient text-white text-sm font-bold shadow-glow hover:-translate-y-0.5 transition-all duration-200"
           >
             Read More
 

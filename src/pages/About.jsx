@@ -155,7 +155,7 @@ export default function About() {
             </ul>
             <Link
               to="/contact"
-              className="mt-5 flex items-center justify-center gap-1.5 w-full py-3 rounded-xl bg-gradient-to-r from-primary-500 to-primary-700 text-white font-bold text-sm hover:-translate-y-0.5 transition-all shadow-glow"
+              className="mt-5 flex items-center justify-center gap-1.5 w-full py-3 rounded-xl btn-primary-gradient text-white font-bold text-sm hover:-translate-y-0.5 transition-all shadow-glow"
             >
               যোগাযোগ করুন
               <ChevronRight size={15} />

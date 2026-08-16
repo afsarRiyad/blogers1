@@ -94,7 +94,7 @@ export default function Comments() {
             </div>
             <button
               type="submit"
-              className="inline-flex items-center justify-center gap-2 px-5 sm:px-6 py-2.5 sm:py-3 rounded-xl bg-gradient-to-r from-primary-500 to-primary-700 hover:from-primary-600 hover:to-primary-800 text-white font-bold text-xs sm:text-sm transition-all shadow-glow hover:-translate-y-0.5 active:translate-y-0 w-full sm:w-auto"
+              className="inline-flex items-center justify-center gap-2 px-5 sm:px-6 py-2.5 sm:py-3 rounded-xl btn-primary-gradient text-white font-bold text-xs sm:text-sm transition-all shadow-glow hover:-translate-y-0.5 active:translate-y-0 w-full sm:w-auto"
             >
               <Send size={15} className="sm:w-4 sm:h-4" />
                Post Comment

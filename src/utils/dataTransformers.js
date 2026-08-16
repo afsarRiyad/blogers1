@@ -5,7 +5,7 @@ export const transformPostData = (supabasePost) => {
     id: supabasePost.id,
     title: supabasePost.title,
     slug: supabasePost.slug,
-    description: supabasePost.description,
+    description: supabasePost.description || '',
     image: supabasePost.thumbnail_url || `https://picsum.photos/seed/${supabasePost.slug}/800/500`,
     category: supabasePost.categories?.name || '',
     categorySlug: supabasePost.categories?.slug || '',

@@ -58,7 +58,7 @@ export default function Contact() {
                 </p>
                 <Link
                   to="/"
-                  className="inline-flex items-center gap-1.5 px-5 py-2.5 rounded-xl bg-gradient-to-r from-primary-500 to-primary-700 text-white font-bold text-sm hover:-translate-y-0.5 transition-all shadow-glow w-full sm:w-auto justify-center"
+                  className="inline-flex items-center gap-1.5 px-5 py-2.5 rounded-xl btn-primary-gradient text-white font-bold text-sm hover:-translate-y-0.5 transition-all shadow-glow w-full sm:w-auto justify-center"
                 >
                   <Home size={15} />
                   হোমে ফিরুন
@@ -120,7 +120,7 @@ export default function Contact() {
                   </div>
                   <button
                     type="submit"
-                    className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-primary-500 to-primary-700 hover:from-primary-600 hover:to-primary-800 text-white font-bold text-sm transition-all shadow-glow hover:-translate-y-0.5 active:translate-y-0 w-full sm:w-auto"
+                    className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl btn-primary-gradient text-white font-bold text-sm transition-all shadow-glow hover:-translate-y-0.5 active:translate-y-0 w-full sm:w-auto"
                   >
                     <Send size={16} />
                     বার্তা পাঠান

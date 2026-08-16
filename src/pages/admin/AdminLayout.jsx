@@ -1,13 +1,14 @@
 import { Outlet, Link, useNavigate, useLocation } from 'react-router-dom';
-import { 
-  LayoutDashboard, 
-  FileText, 
-  FolderOpen, 
-  Tag, 
-  Settings, 
+import {
+  LayoutDashboard,
+  FileText,
+  FolderOpen,
+  Tag,
+  Settings,
   LogOut,
   Menu,
-  X
+  X,
+  Palette
 } from 'lucide-react';
 import { authService } from '../../lib/auth.js';
 import { useState } from 'react';
@@ -27,10 +28,16 @@ export default function AdminLayout() {
     { path: '/admin/posts', icon: FileText, label: 'Posts' },
     { path: '/admin/categories', icon: FolderOpen, label: 'Categories' },
     { path: '/admin/tags', icon: Tag, label: 'Tags' },
+    { path: '/admin/color-settings', icon: Palette, label: 'Color Settings' },
     { path: '/admin/settings', icon: Settings, label: 'Settings' },
   ];
 
-  const isActive = (path) => location.pathname === path;
+  const isActive = (path) => {
+    if (path === '/admin/color-settings') {
+      return location.pathname === '/admin/color-settings';
+    }
+    return location.pathname === path;
+  };
 
   return (
     <div className="min-h-screen bg-dark-50">
@@ -69,7 +76,7 @@ export default function AdminLayout() {
           {/* Logo */}
           <div className="p-6 border-b border-dark-200">
             <h1 className="text-xl font-extrabold text-dark-900 flex items-center gap-2">
-              <div className="w-8 h-8 bg-gradient-to-br from-primary-500 to-primary-700 rounded-lg flex items-center justify-center">
+              <div className="w-8 h-8 bg-gradient-to-br-from-primary rounded-lg flex items-center justify-center">
                 <LayoutDashboard className="w-5 h-5 text-white" />
               </div>
               Admin Panel

@@ -1,14 +1,16 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { 
-  Save, 
-  X, 
-  Upload, 
-  Plus, 
-  Trash2, 
+import {
+  Save,
+  X,
+  Upload,
+  Plus,
+  Trash2,
   Eye,
   Check
 } from 'lucide-react';
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
 import { postsService, categoriesService, promptsService } from '../../services/supabaseService.js';
 import { getCategories, clearCache } from '../../data/postsSupabase.js';
 
@@ -56,9 +58,28 @@ export default function PostForm() {
   const loadPost = async () => {
     try {
       setLoading(true);
-      setLoading(false);
+      const postData = await postsService.getById(id);
+
+      if (postData) {
+        const promptData = await promptsService.getByPostId(id);
+
+        setFormData({
+          title: postData.title || '',
+          slug: postData.slug || '',
+          description: postData.description || '',
+          category_id: postData.category_id || '',
+          author: postData.author || 'TechZone BD',
+          featured: postData.featured || false,
+          published: postData.published !== false,
+          thumbnail_url: postData.thumbnail_url || '',
+          prompt: promptData?.prompt_text || ''
+        });
+
+        setImagePreview(postData.thumbnail_url || '');
+      }
     } catch (error) {
       console.error('Error loading post:', error);
+    } finally {
       setLoading(false);
     }
   };
@@ -113,10 +134,12 @@ export default function PostForm() {
 
   const validateForm = () => {
     const newErrors = {};
-    
+
     if (!formData.title.trim()) newErrors.title = 'Title is required';
     if (!formData.slug.trim()) newErrors.slug = 'Slug is required';
-    if (!formData.description.trim()) newErrors.description = 'Description is required';
+    // Strip HTML tags for validation
+    const plainDescription = formData.description.replace(/<[^>]*>/g, '').trim();
+    if (!plainDescription) newErrors.description = 'Description is required';
     if (!formData.category_id) newErrors.category_id = 'Category is required';
     if (!formData.thumbnail_url) newErrors.thumbnail_url = 'Thumbnail image is required';
 
@@ -153,12 +176,21 @@ export default function PostForm() {
       }
 
       if (formData.prompt.trim()) {
+        const existingPrompt = await promptsService.getByPostId(savedPost.id);
+
         const promptData = {
           post_id: savedPost.id,
           prompt_text: formData.prompt,
           label: 'Prompt'
         };
-        await promptsService.create(promptData);
+
+        if (existingPrompt) {
+          await promptsService.update(existingPrompt.id, promptData);
+        } else {
+          await promptsService.create(promptData);
+        }
+      } else if (isEditing) {
+        await promptsService.deleteByPostId(savedPost.id);
       }
 
       clearCache();
@@ -199,7 +231,7 @@ export default function PostForm() {
           <button
             type="submit"
             disabled={loading}
-            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-primary-500 to-primary-700 text-white font-bold shadow-lg hover:shadow-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r-from-primary text-white font-bold shadow-lg hover:shadow-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {loading ? (
               <>
@@ -260,17 +292,38 @@ export default function PostForm() {
               <label className="block text-sm font-bold text-dark-900 mb-2">
                 Description *
               </label>
-              <textarea
-                name="description"
-                value={formData.description}
-                onChange={handleInputChange}
-                rows={3}
-                className={`w-full px-4 py-3 rounded-xl border ${
-                  errors.description ? 'border-red-500' : 'border-dark-200'
-                } focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 outline-none transition-all text-dark-900 resize-none`}
-                placeholder="Brief description of the post..."
-              />
+              <div className={`rounded-xl border ${
+                errors.description ? 'border-red-500' : 'border-dark-200'
+              } focus-within:border-primary-500 focus-within:ring-2 focus-within:ring-primary-500/20 transition-all`}>
+                <ReactQuill
+                  value={formData.description}
+                  onChange={(value) => setFormData(prev => ({ ...prev, description: value }))}
+                  placeholder="Brief description of the post..."
+                  theme="snow"
+                  modules={{
+                    toolbar: [
+                      [{ 'header': [1, 2, 3, false] }],
+                      ['bold', 'italic', 'underline', 'strike'],
+                      [{ 'color': [] }, { 'background': [] }],
+                      [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                      ['link'],
+                      ['clean']
+                    ],
+                    clipboard: {
+                      matchVisual: false,
+                    }
+                  }}
+                  formats={[
+                    'header', 'bold', 'italic', 'underline', 'strike',
+                    'color', 'background', 'list', 'bullet', 'link'
+                  ]}
+                  className="min-h-[120px]"
+                />
+              </div>
               {errors.description && <p className="text-red-600 text-sm mt-1">{errors.description}</p>}
+              <p className="text-xs text-dark-500 mt-2">
+                Add links, bold text, highlights, and formatting to make your description more engaging.
+              </p>
             </div>
 
             {/* Prompt Field */}

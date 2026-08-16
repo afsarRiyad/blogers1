@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { Send } from 'lucide-react';
+import Google from '../images/google-logo.webp'
 
 export default function Navbar() {
   return (
@@ -13,28 +14,19 @@ export default function Navbar() {
             className="flex items-center gap-2 group"
             aria-label="TechZone BD Home"
           >
-            <div className="relative w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-primary-500 to-primary-700 flex items-center justify-center shadow-glow transition-transform group-hover:scale-105">
-              <svg
-                viewBox="0 0 24 24"
-                className="w-4 h-4 sm:w-5 sm:h-5 text-white"
-                fill="currentColor"
-              >
-                <path d="M8 5v14l11-7z" />
-              </svg>
+            <div className="relative w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br-from-primary flex items-center justify-center shadow-glow transition-transform group-hover:scale-105">
+             <img src={Google} alt="logo" className='object-cover h-full' />
 
               <span className="absolute -top-1 -right-1 text-[8px] sm:text-[9px] font-extrabold bg-dark-900 text-white px-1 py-0.5 rounded-md leading-none">
-                BD
+                27
               </span>
             </div>
 
             <div className="flex flex-col leading-none">
               <span className="text-base sm:text-lg font-extrabold tracking-tight text-dark-900 whitespace-nowrap">
-                Tech<span className="text-primary-600">Zone</span>
+                <span className="text-primary-600">Google</span>
               </span>
 
-              <span className="text-[9px] sm:text-[10px] text-dark-500 font-medium">
-                Technology · APK · AI
-              </span>
             </div>
           </Link>
 

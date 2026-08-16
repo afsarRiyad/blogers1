@@ -7,6 +7,86 @@ const isValidUUID = (str) => {
   return uuidRegex.test(str);
 };
 
+export const colorSettingsService = {
+  async getAll() {
+    if (!isSupabaseConfigured()) {
+      console.warn('Supabase not configured, returning default colors');
+      return this.getDefaultColors();
+    }
+
+    const { data, error } = await supabase
+      .from(TABLES.COLOR_SETTINGS)
+      .select('*');
+
+    if (error) {
+      console.error('Error fetching color settings:', error);
+      return this.getDefaultColors();
+    }
+
+    if (!data || data.length === 0) {
+      console.log('No color settings found, using defaults');
+      return this.getDefaultColors();
+    }
+
+    // Convert to key-value object
+    const colors = {};
+    data.forEach(setting => {
+      colors[setting.key] = setting.value;
+    });
+
+    console.log('Loaded colors from database:', colors);
+    return colors;
+  },
+
+  async update(key, value) {
+    if (!isSupabaseConfigured()) {
+      throw new Error('Supabase not configured');
+    }
+
+    const { data, error } = await supabase
+      .from(TABLES.COLOR_SETTINGS)
+      .upsert({ key, value })
+      .select()
+      .single();
+
+    if (error) throw error;
+    return data;
+  },
+
+  async updateMultiple(colors) {
+    if (!isSupabaseConfigured()) {
+      throw new Error('Supabase not configured');
+    }
+
+    const updates = Object.entries(colors).map(([key, value]) =>
+      supabase.from(TABLES.COLOR_SETTINGS).upsert({ key, value })
+    );
+
+    const results = await Promise.all(updates);
+    return results;
+  },
+
+  getDefaultColors() {
+    return {
+      primary_color: '#0ea5e9',
+      primary_dark: '#0369a1',
+      primary_light: '#0ea5e9',
+      secondary_color: '#6366f1',
+      background_primary: '#f8fafc',
+      background_secondary: '#ffffff',
+      text_primary: '#111827',
+      text_secondary: '#475569',
+      text_muted: '#64748b',
+      border_color: '#e2e8f0',
+      success_color: '#22c55e',
+      warning_color: '#f59e0b',
+      error_color: '#ef4444',
+      button_gradient_start: '#0ea5e9',
+      button_gradient_end: '#0369a1'
+    };
+  }
+};
+
 export const postsService = {
   async getAll(offset = 0, limit = 15) {
     if (!isSupabaseConfigured()) {
@@ -61,6 +141,27 @@ export const postsService = {
       `)
       .eq('slug', slug)
       .eq('published', true)
+      .single();
+
+    if (error) throw error;
+    return data;
+  },
+
+  async getById(id) {
+    if (!isSupabaseConfigured()) {
+      console.warn('Supabase not configured, returning null');
+      return null;
+    }
+
+    const { data, error } = await supabase
+      .from(TABLES.POSTS)
+      .select(`
+        *,
+        categories:category_id (*),
+        tags:post_tags (tags (*)),
+        prompts:prompts (*)
+      `)
+      .eq('id', id)
       .single();
 
     if (error) throw error;
@@ -480,16 +581,23 @@ export const tagsService = {
 export const promptsService = {
   async getByPostId(postId) {
     if (!isSupabaseConfigured()) {
-      console.warn('Supabase not configured, returning empty array');
-      return [];
+      console.warn('Supabase not configured, returning null');
+      return null;
     }
 
     const { data, error } = await supabase
       .from(TABLES.PROMPTS)
       .select('*')
-      .eq('post_id', postId);
+      .eq('post_id', postId)
+      .limit(1)
+      .single();
 
-    if (error) throw error;
+    if (error) {
+      if (error.code === 'PGRST116') {
+        return null;
+      }
+      throw error;
+    }
     return data;
   },
 
@@ -533,6 +641,19 @@ export const promptsService = {
       .from(TABLES.PROMPTS)
       .delete()
       .eq('id', promptId);
+
+    if (error) throw error;
+  },
+
+  async deleteByPostId(postId) {
+    if (!isSupabaseConfigured()) {
+      throw new Error('Supabase not configured');
+    }
+
+    const { error } = await supabase
+      .from(TABLES.PROMPTS)
+      .delete()
+      .eq('post_id', postId);
 
     if (error) throw error;
   }

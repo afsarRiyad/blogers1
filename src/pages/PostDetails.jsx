@@ -18,9 +18,11 @@ import Sidebar from '../components/Sidebar.jsx';
 import TelegramCTA from '../components/TelegramCTA.jsx';
 
 import { getPostBySlug, incrementPostViews } from '../data/postsSupabase.js';
+import { useColors } from '../context/ColorContext.jsx';
 
 export default function PostDetails() {
   const { slug } = useParams();
+  const { colors } = useColors();
   const [post, setPost] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -140,6 +142,28 @@ export default function PostDetails() {
           ========================== */}
           <div className="bg-white rounded-2xl border border-dark-100 p-4 sm:p-6 lg:p-8 shadow-soft">
 
+            {/* Description Section */}
+            {post.description && (
+              <section className="mb-6 sm:mb-8">
+                <div className="mb-4 sm:mb-5">
+                  <span className="inline-flex items-center px-3 py-1 rounded-full bg-primary-50 border border-primary-100 text-[10px] sm:text-xs font-bold text-primary-700 uppercase tracking-wider">
+                    Description
+                  </span>
+                  <h2 className="mt-2.5 text-xl sm:text-2xl lg:text-3xl font-extrabold text-dark-900">
+                    About This Post
+                  </h2>
+                </div>
+                <div className="relative overflow-hidden rounded-2xl border border-dark-200 bg-dark-50">
+                  <div className="p-5 sm:p-7 lg:p-8">
+                    <div
+                      className="prose prose-sm sm:prose-base lg:prose-lg max-w-none text-dark-700 leading-relaxed"
+                      dangerouslySetInnerHTML={{ __html: post.description }}
+                    />
+                  </div>
+                </div>
+              </section>
+            )}
+
             {prompt && (
               <section className=" pt-2 sm:pt-3 border-t border-dark-100">
 
@@ -178,7 +202,7 @@ export default function PostDetails() {
                       className={`shrink-0 inline-flex items-center gap-2 px-3.5 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all ${
                         copied
                           ? 'bg-green-500 text-white'
-                          : 'bg-dark-900 hover:bg-dark-800 text-white'
+                          : 'btn-primary-gradient text-white shadow-glow hover:-translate-y-0.5'
                       }`}
                     >
                       {copied ? (
@@ -252,7 +276,7 @@ export default function PostDetails() {
 
                 <button
                   type="button"
-                  className="inline-flex items-center justify-center gap-1.5 px-3 sm:px-4 py-2 rounded-xl bg-gradient-to-r from-primary-500 to-primary-700 text-white shadow-soft hover:-translate-y-0.5 transition-all text-[11px] sm:text-xs font-bold w-full sm:w-auto"
+                  className="inline-flex items-center justify-center gap-1.5 px-3 sm:px-4 py-2 rounded-xl btn-primary-gradient text-white shadow-soft hover:-translate-y-0.5 transition-all text-[11px] sm:text-xs font-bold w-full sm:w-auto"
                 >
                   <Download
                     size={13}

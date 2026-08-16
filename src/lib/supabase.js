@@ -13,4 +13,5 @@ export const TABLES = {
   TAGS: 'tags',
   POST_TAGS: 'post_tags',
   PROMPTS: 'prompts',
+  COLOR_SETTINGS: 'color_settings',
 };

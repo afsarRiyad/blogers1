@@ -2,6 +2,14 @@ import { Link } from 'react-router-dom';
 import { Calendar, Eye, ArrowRight, Sparkles } from 'lucide-react';
 import pic from '../images/images.jpg';
 
+const stripHtml = (html) => {
+  if (!html) return '';
+  const tmp = document.createElement('div');
+  tmp.innerHTML = html;
+  const text = tmp.textContent || tmp.innerText || '';
+  return text.trim();
+};
+
 export default function FeaturedPost({ post }) {
   if (!post) return null;
 
@@ -24,7 +32,7 @@ export default function FeaturedPost({ post }) {
           <div className="absolute inset-0 bg-gradient-to-r from-dark-900/60 via-dark-900/20 to-transparent lg:bg-gradient-to-t lg:from-dark-900/70 lg:via-dark-900/10 lg:to-transparent" />
 
           <div className="absolute top-3 left-3 sm:top-4 sm:left-4">
-            <span className="inline-flex items-center gap-1.5 px-2.5 sm:px-3.5 py-1 sm:py-1.5 rounded-full bg-gradient-to-r from-primary-500 to-primary-700 text-white text-[10px] sm:text-xs font-extrabold shadow-glow">
+            <span className="inline-flex items-center gap-1.5 px-2.5 sm:px-3.5 py-1 sm:py-1.5 rounded-full bg-gradient-to-r-from-primary text-white text-[10px] sm:text-xs font-extrabold shadow-glow">
               <Sparkles size={11} className="sm:w-3 sm:h-3" />
               Featured Post
             </span>
@@ -52,7 +60,7 @@ export default function FeaturedPost({ post }) {
           </h2>
 
           <p className="text-xs sm:text-sm lg:text-base text-dark-600 leading-relaxed mb-4 sm:mb-6 line-clamp-3 lg:line-clamp-4">
-            {post.description}
+            {stripHtml(post.description)}
           </p>
 
           <div className="flex flex-wrap items-center gap-2.5 sm:gap-4 mb-4 sm:mb-6 text-[11px] sm:text-sm text-dark-500">
@@ -81,7 +89,7 @@ export default function FeaturedPost({ post }) {
 
           <Link
             to={`/post/${post.slug}`}
-            className="group inline-flex items-center justify-center gap-2 self-start px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl bg-gradient-to-r from-primary-500 to-primary-700 hover:from-primary-600 hover:to-primary-800 text-white font-bold text-xs sm:text-sm transition-all shadow-glow hover:-translate-y-0.5 active:translate-y-0 w-full sm:w-auto"
+            className="group inline-flex items-center justify-center gap-2 self-start px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl bg-gradient-to-r-from-primary text-white font-bold text-xs sm:text-sm transition-all shadow-glow hover:-translate-y-0.5 active:translate-y-0 w-full sm:w-auto"
           >
             Read More
             <ArrowRight

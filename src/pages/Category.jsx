@@ -181,7 +181,7 @@ export default function Category() {
               <p className="text-sm text-dark-600 mb-5">এই ক্যাটাগরিতে খুব দ্রুত নতুন পোস্ট আসছে।</p>
               <Link
                 to="/"
-                className="inline-flex items-center gap-1.5 px-5 py-2.5 rounded-xl bg-gradient-to-r from-primary-500 to-primary-700 text-white font-bold text-sm hover:-translate-y-0.5 transition-all shadow-glow w-full sm:w-auto justify-center"
+                className="inline-flex items-center gap-1.5 px-5 py-2.5 rounded-xl btn-primary-gradient text-white font-bold text-sm hover:-translate-y-0.5 transition-all shadow-glow w-full sm:w-auto justify-center"
               >
                 <Home size={15} />
                 হোমে ফিরুন

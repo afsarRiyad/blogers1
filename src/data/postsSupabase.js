@@ -133,6 +133,14 @@ export const getPopularPosts = async (limit = 5) => {
   }
 };
 
+const stripHtml = (html) => {
+  if (!html) return '';
+  const tmp = document.createElement('div');
+  tmp.innerHTML = html;
+  const text = tmp.textContent || tmp.innerText || '';
+  return text.trim();
+};
+
 export const searchPosts = async (query) => {
   if (!query || query.trim() === '') {
     return await getPosts();
@@ -141,9 +149,9 @@ export const searchPosts = async (query) => {
   if (!isSupabaseConfigured()) {
     console.log('Using static data (Supabase not configured)');
     const q = query.toLowerCase();
-    return staticPosts.filter(p => 
-      p.title.toLowerCase().includes(q) || 
-      p.description.toLowerCase().includes(q) ||
+    return staticPosts.filter(p =>
+      p.title.toLowerCase().includes(q) ||
+      stripHtml(p.description).toLowerCase().includes(q) ||
       p.category.toLowerCase().includes(q)
     );
   }
@@ -154,9 +162,9 @@ export const searchPosts = async (query) => {
   } catch (error) {
     console.error('Error searching posts from Supabase, falling back to static data:', error);
     const q = query.toLowerCase();
-    return staticPosts.filter(p => 
-      p.title.toLowerCase().includes(q) || 
-      p.description.toLowerCase().includes(q) ||
+    return staticPosts.filter(p =>
+      p.title.toLowerCase().includes(q) ||
+      stripHtml(p.description).toLowerCase().includes(q) ||
       p.category.toLowerCase().includes(q)
     );
   }

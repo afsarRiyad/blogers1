@@ -1,15 +1,23 @@
 import { useState, useEffect } from 'react';
-import { 
-  FileText, 
-  FolderOpen, 
-  Tag as TagIcon, 
-  Eye, 
+import {
+  FileText,
+  FolderOpen,
+  Tag as TagIcon,
+  Eye,
   TrendingUp,
   Plus,
   ArrowRight
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { getPosts, getCategories, getTags } from '../../data/postsSupabase.js';
+
+const stripHtml = (html) => {
+  if (!html) return '';
+  const tmp = document.createElement('div');
+  tmp.innerHTML = html;
+  const text = tmp.textContent || tmp.innerText || '';
+  return text.trim();
+};
 
 export default function AdminDashboard() {
   const [stats, setStats] = useState({
@@ -105,7 +113,7 @@ export default function AdminDashboard() {
         </div>
         <Link
           to="/admin/posts/new"
-          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-primary-500 to-primary-700 text-white font-bold shadow-lg hover:shadow-xl transition-all w-full sm:w-auto justify-center"
+          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r-from-primary text-white font-bold shadow-lg hover:shadow-xl transition-all w-full sm:w-auto justify-center"
         >
           <Plus className="w-5 h-5" />
           New Post
@@ -171,7 +179,7 @@ export default function AdminDashboard() {
                       {post.title}
                     </h3>
                     <p className="text-sm text-dark-600 line-clamp-2 mb-2">
-                      {post.description}
+                      {stripHtml(post.description)}
                     </p>
                     <div className="flex items-center gap-4 text-xs text-dark-500">
                       <span className="inline-flex items-center gap-1">

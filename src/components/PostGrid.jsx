@@ -1,6 +1,14 @@
 import { Link } from 'react-router-dom';
 import { Calendar, Eye, ArrowRight } from 'lucide-react';
 
+const stripHtml = (html) => {
+  if (!html) return '';
+  const tmp = document.createElement('div');
+  tmp.innerHTML = html;
+  const text = tmp.textContent || tmp.innerText || '';
+  return text.trim();
+};
+
 export default function PostGrid({ posts = [] }) {
   return (
     <div className="flex flex-col gap-6 sm:gap-8">
@@ -36,7 +44,7 @@ export default function PostGrid({ posts = [] }) {
             </Link>
 
             <p className="mt-2 sm:mt-3 text-sm sm:text-base text-dark-600 leading-relaxed line-clamp-3">
-              {post.description}
+              {stripHtml(post.description)}
             </p>
 
             {/* Meta Information */}
@@ -69,7 +77,7 @@ export default function PostGrid({ posts = [] }) {
             <div className="mt-4 sm:mt-5">
               <Link
                 to={`/post/${post.slug}`}
-                className="group/button inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-white text-sm font-bold shadow-glow hover:-translate-y-0.5 transition-all duration-200"
+                className="group/button inline-flex items-center gap-2 px-5 py-2.5 rounded-full btn-primary-gradient text-white text-sm font-bold shadow-glow hover:-translate-y-0.5 transition-all duration-200"
               >
                 Read More
                 <ArrowRight

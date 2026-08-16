@@ -18,7 +18,7 @@ export default function Footer() {
           {/* Logo & About */}
           <div>
             <Link to="/" className="inline-flex items-center gap-2.5 mb-4">
-              <div className="relative w-11 h-11 rounded-xl bg-gradient-to-br from-primary-500 to-primary-700 flex items-center justify-center shadow-glow">
+              <div className="relative w-11 h-11 rounded-xl bg-gradient-to-br-from-primary flex items-center justify-center shadow-glow">
                 <svg
                   viewBox="0 0 24 24"
                   className="w-5 h-5 text-white"
@@ -133,7 +133,7 @@ export default function Footer() {
 
             <a
               href="mailto:info@techzonebd.com"
-              className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-gradient-to-r from-primary-500 to-primary-700 hover:from-primary-600 hover:to-primary-800 text-white font-bold text-sm shadow-glow hover:-translate-y-0.5 transition-all"
+              className="inline-flex items-center gap-2 px-5 py-3 rounded-xl btn-primary-gradient text-white font-bold text-sm shadow-glow hover:-translate-y-0.5 transition-all"
             >
               <Mail size={16} />
               Contact Us

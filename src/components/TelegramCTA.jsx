@@ -73,7 +73,7 @@ export default function TelegramCTA() {
         </p>
       </div>
 
-      <div className="grid grid-cols-4 gap-3">
+      <div className="grid grid-cols-4  gap-3">
         {socialLinks.map((social) => {
           const Icon = social.icon;
 
@@ -85,7 +85,7 @@ export default function TelegramCTA() {
               rel="noopener noreferrer"
               aria-label={social.name}
               title={social.name}
-              className={`${social.className} aspect-square rounded-xl flex items-center justify-center text-white shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-200`}
+              className={`${social.className} w-10 aspect-square rounded-xl flex items-center justify-center text-white shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-200`}
             >
               <Icon size={20} />
             </a>

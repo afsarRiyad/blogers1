@@ -1,17 +1,25 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { 
-  Plus, 
-  Search, 
-  Edit, 
-  Trash2, 
-  Eye, 
+import {
+  Plus,
+  Search,
+  Edit,
+  Trash2,
+  Eye,
   Calendar,
   Filter,
   FileText
 } from 'lucide-react';
 import { getPosts, clearCache } from '../../data/postsSupabase.js';
 import { postsService } from '../../services/supabaseService.js';
+
+const stripHtml = (html) => {
+  if (!html) return '';
+  const tmp = document.createElement('div');
+  tmp.innerHTML = html;
+  const text = tmp.textContent || tmp.innerText || '';
+  return text.trim();
+};
 
 export default function AdminPosts() {
   const [posts, setPosts] = useState([]);
@@ -28,7 +36,7 @@ export default function AdminPosts() {
     if (searchQuery || categoryFilter !== 'all') {
       const filtered = posts.filter(post => {
         const matchesSearch = post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                             post.description?.toLowerCase().includes(searchQuery.toLowerCase());
+                             stripHtml(post.description).toLowerCase().includes(searchQuery.toLowerCase());
         const matchesCategory = categoryFilter === 'all' || post.category === categoryFilter;
         return matchesSearch && matchesCategory;
       });
@@ -117,7 +125,7 @@ export default function AdminPosts() {
         </div>
         <Link
           to="/admin/posts/new"
-          className="inline-flex items-center gap-2 px-4 sm:px-5 py-2.5 rounded-xl bg-gradient-to-r from-primary-500 to-primary-700 text-white font-bold shadow-lg hover:shadow-xl transition-all w-full sm:w-auto justify-center text-sm sm:text-base active:scale-[0.98]"
+          className="inline-flex items-center gap-2 px-4 sm:px-5 py-2.5 rounded-xl bg-gradient-to-r-from-primary text-white font-bold shadow-lg hover:shadow-xl transition-all w-full sm:w-auto justify-center text-sm sm:text-base active:scale-[0.98]"
         >
           <Plus className="w-4 h-4 sm:w-5 sm:h-5" />
           New Post
@@ -178,6 +186,11 @@ export default function AdminPosts() {
                     <h3 className="font-bold text-dark-900 text-sm line-clamp-2">
                       {post.title}
                     </h3>
+                    {post.description && (
+                      <p className="text-[10px] text-dark-500 line-clamp-2 mt-1">
+                        {stripHtml(post.description)}
+                      </p>
+                    )}
                     <div className="flex flex-wrap items-center gap-2 mt-1.5">
                       <span className="inline-flex items-center px-2 py-0.5 rounded-full bg-primary-50 text-primary-700 text-[10px] font-medium">
                         {post.category || 'Uncategorized'}
@@ -261,8 +274,13 @@ export default function AdminPosts() {
                             <h3 className="font-bold text-dark-900 line-clamp-1 text-xs md:text-sm">
                               {post.title}
                             </h3>
-                            <p className="text-[10px] md:text-xs text-dark-500 line-clamp-1 hidden md:block">
-                              {post.description}
+                            <p className="text-[10px] md:text-xs text-dark-500 line-clamp-2 hidden md:block overflow-hidden text-ellipsis" style={{
+                              display: '-webkit-box',
+                              WebkitLineClamp: 2,
+                              WebkitBoxOrient: 'vertical',
+                              overflow: 'hidden'
+                            }}>
+                              {stripHtml(post.description)}
                             </p>
                           </div>
                         </div>
