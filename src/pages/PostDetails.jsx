@@ -291,10 +291,7 @@ export default function PostDetails() {
           <Comments />
 
           {/* Mobile Telegram */}
-          <div className="mt-6 lg:hidden order-last">
-            <TelegramCTA />
-          </div>
-
+          
         </article>
 
         {/* =========================
