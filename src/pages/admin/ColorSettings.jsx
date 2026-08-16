@@ -6,9 +6,11 @@ const colorGroups = [
   {
     name: 'Primary Colors',
     colors: [
-      { key: 'primary_color', label: 'Primary Color', description: 'Main color for buttons, links, accents, and copy button' },
+      { key: 'primary_color', label: 'Primary Color', description: 'Main color for buttons, links, and accents' },
       { key: 'primary_dark', label: 'Primary Dark', description: 'Darker shade for hover states' },
       { key: 'primary_light', label: 'Primary Light', description: 'Lighter shade for backgrounds' },
+      { key: 'logo_color', label: 'Logo Color', description: 'Logo and branding color' },
+      { key: 'tag_color', label: 'Tag Color', description: 'Category and tag colors' },
     ]
   },
   {
@@ -113,7 +115,7 @@ export default function ColorSettings() {
       {/* Header */}
       <div className="mb-6 sm:mb-8">
         <div className="flex items-center gap-3 mb-2">
-          <div className="w-12 h-12 rounded-xl bg-gradient-to-br-from-primary flex items-center justify-center text-white shadow-glow">
+          <div className="w-12 h-12 rounded-xl logo-gradient flex items-center justify-center text-white shadow-glow">
             <Palette className="w-6 h-6" />
           </div>
           <div>
@@ -211,9 +213,21 @@ export default function ColorSettings() {
 
           {/* Text Preview */}
           <div className="space-y-2">
-            <h3 className="text-2xl font-bold text-dark-900">Heading Text</h3>
-            <p className="text-dark-600">Body text with normal styling. This is how regular content will appear.</p>
-            <p className="text-dark-500 text-sm">Muted text for labels and metadata.</p>
+            <h3 className="text-2xl font-bold" style={{ color: localColors.text_primary || colors.text_primary }}>Heading Text</h3>
+            <p style={{ color: localColors.text_secondary || colors.text_secondary }}>Body text with normal styling. This is how regular content will appear.</p>
+            <p className="text-sm" style={{ color: localColors.text_muted || colors.text_muted }}>Muted text for labels and metadata.</p>
+          </div>
+
+          {/* Background Preview */}
+          <div className="space-y-3">
+            <div style={{ backgroundColor: localColors.background_primary || colors.background_primary, color: localColors.text_primary || colors.text_primary }} className="p-4 rounded-lg">
+              <p className="font-bold">Primary Background</p>
+              <p className="text-sm opacity-80">This is the main background color</p>
+            </div>
+            <div style={{ backgroundColor: localColors.background_secondary || colors.background_secondary, color: localColors.text_secondary || colors.text_secondary, borderColor: localColors.border_color || colors.border_color }} className="p-4 rounded-lg border">
+              <p className="font-bold">Secondary Background</p>
+              <p className="text-sm opacity-80">This is the card/container background color</p>
+            </div>
           </div>
 
           {/* Status Colors */}
@@ -226,7 +240,7 @@ export default function ColorSettings() {
           {/* Color Swatches */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3 pt-4 border-t border-dark-200">
             <div className="text-center">
-              <div className="w-full h-12 rounded-lg mb-2 bg-gradient-to-r-from-primary"></div>
+              <div className="w-full h-12 rounded-lg mb-2" style={{ backgroundColor: localColors.primary_color || colors.primary_color }}></div>
               <p className="text-xs text-dark-600">Primary</p>
             </div>
             <div className="text-center">

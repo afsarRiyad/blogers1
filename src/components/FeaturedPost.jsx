@@ -32,7 +32,7 @@ export default function FeaturedPost({ post }) {
           <div className="absolute inset-0 bg-gradient-to-r from-dark-900/60 via-dark-900/20 to-transparent lg:bg-gradient-to-t lg:from-dark-900/70 lg:via-dark-900/10 lg:to-transparent" />
 
           <div className="absolute top-3 left-3 sm:top-4 sm:left-4">
-            <span className="inline-flex items-center gap-1.5 px-2.5 sm:px-3.5 py-1 sm:py-1.5 rounded-full bg-gradient-to-r-from-primary text-white text-[10px] sm:text-xs font-extrabold shadow-glow">
+            <span className="inline-flex items-center gap-1.5 px-2.5 sm:px-3.5 py-1 sm:py-1.5 rounded-full tag-gradient text-white text-[10px] sm:text-xs font-extrabold shadow-glow">
               <Sparkles size={11} className="sm:w-3 sm:h-3" />
               Featured Post
             </span>

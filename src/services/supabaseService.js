@@ -82,7 +82,9 @@ export const colorSettingsService = {
       warning_color: '#f59e0b',
       error_color: '#ef4444',
       button_gradient_start: '#0ea5e9',
-      button_gradient_end: '#0369a1'
+      button_gradient_end: '#0369a1',
+      logo_color: '#0ea5e9',
+      tag_color: '#0ea5e9'
     };
   }
 };

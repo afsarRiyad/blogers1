@@ -59,7 +59,9 @@ export const ColorProvider = ({ children }) => {
     root.style.setProperty('--warning-color', colorValues.warning_color);
     root.style.setProperty('--error-color', colorValues.error_color);
     root.style.setProperty('--button-gradient-start', colorValues.button_gradient_start);
-    root.style.setProperty('--button-gradient-end', colorValues.button_gradient_end);
+    root.style.setProperty('--button-gradient-end', color_values.button_gradient_end);
+    root.style.setProperty('--logo-color', colorValues.logo_color || colorValues.primary_color);
+    root.style.setProperty('--tag-color', colorValues.tag_color || colorValues.primary_color);
 
     // Verify CSS variables were set
     const primaryColor = getComputedStyle(root).getPropertyValue('--primary-color');

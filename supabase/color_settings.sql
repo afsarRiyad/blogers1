@@ -44,5 +44,7 @@ INSERT INTO color_settings (key, value, description) VALUES
   ('warning_color', '#f59e0b', 'Warning state color'),
   ('error_color', '#ef4444', 'Error state color'),
   ('button_gradient_start', '#0ea5e9', 'Button gradient start color'),
-  ('button_gradient_end', '#0369a1', 'Button gradient end color')
+  ('button_gradient_end', '#0369a1', 'Button gradient end color'),
+  ('logo_color', '#0ea5e9', 'Logo and branding color'),
+  ('tag_color', '#0ea5e9', 'Category and tag colors')
 ON CONFLICT (key) DO NOTHING;
