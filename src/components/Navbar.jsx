@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { Send } from 'lucide-react';
-import Google from '../images/google-logo.webp'
+import Logo from '../images/logo.jpg'
 
 export default function Navbar() {
   return (
@@ -15,7 +15,7 @@ export default function Navbar() {
             aria-label="TechZone BD Home"
           >
             <div className="relative w-9 h-9 sm:w-10 sm:h-10 rounded-xl logo-gradient flex items-center justify-center shadow-glow transition-transform group-hover:scale-105">
-             <img src={Google} alt="logo" className='object-cover h-full' />
+             <img src={Logo} alt="logo" className='object-cover h-full' />
 
               <span className="absolute -top-1 -right-1 text-[8px] sm:text-[9px] font-extrabold bg-dark-900 text-white px-1 py-0.5 rounded-md leading-none">
                 27
