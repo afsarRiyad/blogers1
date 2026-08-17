@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import Logo from '../images/logo.jpg'
+import Logo from '../images/logo.png'
 import {
   Send,
   Facebook,
@@ -34,14 +34,14 @@ export default function Footer() {
            
                        <div className="flex flex-col leading-none">
                          <span className="text-base sm:text-lg font-extrabold tracking-tight text-dark-900 whitespace-nowrap">
-                           <span className="text-primary-600">Google</span>
+                           <span className="text-primary-600">VpxBd</span>
                          </span>
            
                        </div>
                      </Link>
 
             <p className="text-sm text-dark-600 leading-relaxed max-w-md">
-              TechZone BD is a modern technology platform featuring APK,
+              VpxBd is a modern technology platform featuring APK,
               AI tools, apps, software, and useful technology resources.
             </p>
 
@@ -89,7 +89,7 @@ export default function Footer() {
                   </p>
 
                   <p className="text-sm font-medium text-dark-700 group-hover:text-primary-600 transition-colors">
-                    info@techzonebd.com
+                    technicalblog44@gmail.com
                   </p>
                 </div>
               </a>
@@ -143,7 +143,7 @@ export default function Footer() {
         <div className="mt-10 sm:mt-12 pt-5 sm:pt-6 border-t border-dark-100 flex flex-col sm:flex-row items-center justify-between gap-3">
 
           <p className="text-xs text-dark-500 text-center sm:text-left">
-            © 2026 TechZone BD. All rights reserved.
+            © 2026 vpxbd. All rights reserved.
           </p>
 
           <p className="text-xs text-dark-400">

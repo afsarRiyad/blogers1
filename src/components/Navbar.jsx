@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { Send } from 'lucide-react';
-import Logo from '../images/logo.jpg'
+import Logo from '../images/logo.png'
 
 export default function Navbar() {
   return (
@@ -24,7 +24,7 @@ export default function Navbar() {
 
             <div className="flex flex-col leading-none">
               <span className="text-base sm:text-lg font-extrabold tracking-tight text-dark-900 whitespace-nowrap">
-                <span className="text-primary-600">Google</span>
+                <span className="text-primary-600">VpxBd</span>
               </span>
 
             </div>
