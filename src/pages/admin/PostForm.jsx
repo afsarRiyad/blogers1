@@ -7,11 +7,14 @@ import {
   Plus,
   Trash2,
   Eye,
-  Check
+  Check,
+  ExternalLink,
+  Copy,
+  LayoutTemplate
 } from 'lucide-react';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
-import { postsService, categoriesService, promptsService } from '../../services/supabaseService.js';
+import { postsService, categoriesService } from '../../services/supabaseService.js';
 import { getCategories, clearCache } from '../../data/postsSupabase.js';
 
 export default function PostForm() {
@@ -32,7 +35,9 @@ export default function PostForm() {
     featured: false,
     published: true,
     thumbnail_url: '',
-    prompt: ''
+    push_form_heading: '',
+    push_form_subheading: '',
+    push_form_buttons: []
   });
 
   const [imagePreview, setImagePreview] = useState('');
@@ -72,7 +77,12 @@ export default function PostForm() {
           featured: postData.featured || false,
           published: postData.published !== false,
           thumbnail_url: postData.thumbnail_url || '',
-          prompt: promptData?.prompt_text || ''
+          push_form_heading: postData.push_form_heading || '',
+          push_form_subheading: postData.push_form_subheading || '',
+          push_form_buttons: postData.push_form_buttons?.map(btn => ({
+            ...btn,
+            emoji: btn.emoji || '🔗'
+          })) || []
         });
 
         setImagePreview(postData.thumbnail_url || '');
@@ -93,7 +103,7 @@ export default function PostForm() {
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
-    
+
     if (name === 'title') {
       setFormData(prev => ({
         ...prev,
@@ -106,6 +116,38 @@ export default function PostForm() {
         [name]: type === 'checkbox' ? checked : value
       }));
     }
+  };
+
+  const addButton = (type) => {
+    const newButton = {
+      type: type,
+      text: '',
+      emoji: type === 'link' ? '🔗' : undefined,
+      copyText: type === 'copy' ? '' : undefined,
+      url: type === 'link' ? '' : undefined,
+      backgroundColor: '',
+      textColor: ''
+    };
+    setFormData(prev => ({
+      ...prev,
+      push_form_buttons: [...prev.push_form_buttons, newButton]
+    }));
+  };
+
+  const updateButton = (index, field, value) => {
+    setFormData(prev => ({
+      ...prev,
+      push_form_buttons: prev.push_form_buttons.map((btn, i) =>
+        i === index ? { ...btn, [field]: value } : btn
+      )
+    }));
+  };
+
+  const removeButton = (index) => {
+    setFormData(prev => ({
+      ...prev,
+      push_form_buttons: prev.push_form_buttons.filter((_, i) => i !== index)
+    }));
   };
 
   const handleImageUpload = async (e) => {
@@ -137,9 +179,6 @@ export default function PostForm() {
 
     if (!formData.title.trim()) newErrors.title = 'Title is required';
     if (!formData.slug.trim()) newErrors.slug = 'Slug is required';
-    // Strip HTML tags for validation
-    const plainDescription = formData.description.replace(/<[^>]*>/g, '').trim();
-    if (!plainDescription) newErrors.description = 'Description is required';
     if (!formData.category_id) newErrors.category_id = 'Category is required';
     if (!formData.thumbnail_url) newErrors.thumbnail_url = 'Thumbnail image is required';
 
@@ -163,34 +202,17 @@ export default function PostForm() {
         author: formData.author,
         featured: formData.featured,
         published: formData.published,
-        thumbnail_url: formData.thumbnail_url
+        thumbnail_url: formData.thumbnail_url,
+        push_form_heading: formData.push_form_heading,
+        push_form_subheading: formData.push_form_subheading,
+        push_form_buttons: formData.push_form_buttons
       };
-
-      console.log('Saving post data:', postData);
 
       let savedPost;
       if (isEditing) {
         savedPost = await postsService.update(id, postData);
       } else {
         savedPost = await postsService.create(postData);
-      }
-
-      if (formData.prompt.trim()) {
-        const existingPrompt = await promptsService.getByPostId(savedPost.id);
-
-        const promptData = {
-          post_id: savedPost.id,
-          prompt_text: formData.prompt,
-          label: 'Prompt'
-        };
-
-        if (existingPrompt) {
-          await promptsService.update(existingPrompt.id, promptData);
-        } else {
-          await promptsService.create(promptData);
-        }
-      } else if (isEditing) {
-        await promptsService.deleteByPostId(savedPost.id);
       }
 
       clearCache();
@@ -326,22 +348,191 @@ export default function PostForm() {
               </p>
             </div>
 
-            {/* Prompt Field */}
-            <div className="bg-white rounded-2xl border border-dark-200 p-6 shadow-soft">
-              <label className="block text-sm font-bold text-dark-900 mb-2">
-                Prompt
+            {/* Push Form Dashboard Options */}
+            <div className="bg-white rounded-2xl border border-dark-200 p-6 shadow-soft space-y-4">
+              <label className="text-sm font-bold text-dark-900 flex items-center gap-2">
+                <LayoutTemplate className="w-4 h-4" />
+                Redirect URL or Copy Link Buttons
               </label>
-              <textarea
-                name="prompt"
-                value={formData.prompt}
-                onChange={handleInputChange}
-                rows={4}
-                className="w-full px-4 py-3 rounded-xl border border-dark-200 focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 outline-none transition-all text-dark-900 resize-none font-mono text-sm"
-                placeholder="Enter the prompt that users can copy..."
-              />
-              <p className="text-xs text-dark-500 mt-2">
-                This prompt will appear prominently when users click "Read More"
-              </p>
+
+              <div>
+                <label className="block text-sm font-bold text-dark-900 mb-2">
+                  Heading
+                </label>
+                <input
+                  type="text"
+                  name="push_form_heading"
+                  value={formData.push_form_heading}
+                  onChange={handleInputChange}
+                  className="w-full px-4 py-3 rounded-xl border border-dark-200 focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 outline-none"
+                  placeholder="e.g., Shazam Premium APK"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-bold text-dark-900 mb-2">
+                  Subheading (Optional)
+                </label>
+                <textarea
+                  name="push_form_subheading"
+                  value={formData.push_form_subheading}
+                  onChange={handleInputChange}
+                  className="w-full px-4 py-3 rounded-xl border border-dark-200 focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 outline-none resize-none"
+                  rows={2}
+                  placeholder="e.g., Download the latest version"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-bold text-dark-900 mb-2">
+                  Buttons
+                </label>
+                <div className="space-y-3">
+                  {formData.push_form_buttons.map((button, index) => (
+                    <div key={index} className="p-4 rounded-xl border border-dark-200 bg-dark-50">
+                      <div className="flex items-center justify-between mb-3">
+                        <div className="flex items-center gap-2">
+                          {button.type === 'link' ? (
+                            <ExternalLink className="w-4 h-4 text-primary-600" />
+                          ) : (
+                            <Copy className="w-4 h-4 text-primary-600" />
+                          )}
+                          <span className="text-sm font-bold text-dark-900">
+                            {button.type === 'link' ? 'Link Button' : 'Copy Button'} #{index + 1}
+                          </span>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => removeButton(index)}
+                          className="p-2 rounded-lg text-red-600 hover:bg-red-50 transition-colors"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </div>
+
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        {button.type === 'link' && (
+                          <>
+                            <div>
+                              <label className="block text-xs font-bold text-dark-900 mb-1">
+                                Emoji
+                              </label>
+                              <select
+                                value={button.emoji || '🔗'}
+                                onChange={(e) => updateButton(index, 'emoji', e.target.value)}
+                                className="w-full px-3 py-2 rounded-lg border border-dark-200 focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 outline-none text-sm"
+                              >
+                                <option value="🔗">🔗 Link</option>
+                                <option value="📥">📥 Download</option>
+                                <option value="🎁">🎁 Gift</option>
+                                <option value="🚀">🚀 Rocket</option>
+                                <option value="⭐">⭐ Star</option>
+                                <option value="💎">💎 Diamond</option>
+                                <option value="🔥">🔥 Fire</option>
+                                <option value="✨">✨ Sparkles</option>
+                                <option value="🎯">🎯 Target</option>
+                                <option value="📱">📱 Mobile</option>
+                                <option value="💻">💻 Computer</option>
+                                <option value="🎮">🎮 Gaming</option>
+                                <option value="🎵">🎵 Music</option>
+                                <option value="📷">📷 Camera</option>
+                                <option value="🎧">🎧 Headphones</option>
+                                <option value="⚡">⚡ Lightning</option>
+                                <option value="🌟">🌟 Glowing Star</option>
+                                <option value="💡">💡 Light Bulb</option>
+                                <option value="🎪">🎪 Circus</option>
+                                <option value="🎨">🎨 Art</option>
+                              </select>
+                            </div>
+                            <div>
+                              <label className="block text-xs font-bold text-dark-900 mb-1">
+                                Button Text
+                              </label>
+                              <input
+                                type="text"
+                                value={button.text}
+                                onChange={(e) => updateButton(index, 'text', e.target.value)}
+                                className="w-full px-3 py-2 rounded-lg border border-dark-200 focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 outline-none text-sm"
+                                placeholder="e.g., Download Now"
+                              />
+                            </div>
+                            <div className="md:col-span-2">
+                              <label className="block text-xs font-bold text-dark-900 mb-1">
+                                URL
+                              </label>
+                              <input
+                                type="url"
+                                value={button.url || ''}
+                                onChange={(e) => updateButton(index, 'url', e.target.value)}
+                                className="w-full px-3 py-2 rounded-lg border border-dark-200 focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 outline-none text-sm"
+                                placeholder="https://example.com"
+                              />
+                            </div>
+                          </>
+                        )}
+
+                        {button.type === 'copy' && (
+                          <div className="md:col-span-2">
+                            <label className="block text-xs font-bold text-dark-900 mb-1">
+                              Text to Copy
+                            </label>
+                            <input
+                              type="text"
+                              value={button.copyText || ''}
+                              onChange={(e) => updateButton(index, 'copyText', e.target.value)}
+                              className="w-full px-3 py-2 rounded-lg border border-dark-200 focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 outline-none text-sm"
+                              placeholder="e.g., https://example.com"
+                            />
+                          </div>
+                        )}
+
+                        <div>
+                          <label className="block text-xs font-bold text-dark-900 mb-1">
+                            Background Color
+                          </label>
+                          <input
+                            type="color"
+                            value={button.backgroundColor || '#0ea5e9'}
+                            onChange={(e) => updateButton(index, 'backgroundColor', e.target.value)}
+                            className="w-full h-10 rounded-lg border border-dark-200 cursor-pointer"
+                          />
+                        </div>
+
+                        <div>
+                          <label className="block text-xs font-bold text-dark-900 mb-1">
+                            Text Color
+                          </label>
+                          <input
+                            type="color"
+                            value={button.textColor || '#ffffff'}
+                            onChange={(e) => updateButton(index, 'textColor', e.target.value)}
+                            className="w-full h-10 rounded-lg border border-dark-200 cursor-pointer"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+
+                  <div className="flex items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={() => addButton('link')}
+                      className="flex items-center gap-2 px-3 py-2 rounded-lg border border-dark-200 text-dark-700 text-sm font-medium hover:bg-dark-50 transition-colors"
+                    >
+                      <ExternalLink className="w-4 h-4" />
+                      Add Link Button
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => addButton('copy')}
+                      className="flex items-center gap-2 px-3 py-2 rounded-lg border border-dark-200 text-dark-700 text-sm font-medium hover:bg-dark-50 transition-colors"
+                    >
+                      <Copy className="w-4 h-4" />
+                      Add Copy Button
+                    </button>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -465,7 +656,7 @@ export default function PostForm() {
               <label className="text-sm font-bold text-dark-900">
                 Post Options
               </label>
-              
+
               <label className="flex items-center gap-3 cursor-pointer">
                 <input
                   type="checkbox"
@@ -487,6 +678,7 @@ export default function PostForm() {
                 />
                 <span className="text-sm text-dark-700">Published</span>
               </label>
+
             </div>
 
             {/* Preview Button */}

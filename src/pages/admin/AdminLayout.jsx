@@ -8,7 +8,8 @@ import {
   LogOut,
   Menu,
   X,
-  Palette
+  Palette,
+  LayoutTemplate
 } from 'lucide-react';
 import { authService } from '../../lib/auth.js';
 import { useState } from 'react';
@@ -28,6 +29,7 @@ export default function AdminLayout() {
     { path: '/admin/posts', icon: FileText, label: 'Posts' },
     { path: '/admin/categories', icon: FolderOpen, label: 'Categories' },
     { path: '/admin/tags', icon: Tag, label: 'Tags' },
+    { path: '/admin/push-form-settings', icon: LayoutTemplate, label: 'Push Form' },
     { path: '/admin/color-settings', icon: Palette, label: 'Color Settings' },
     { path: '/admin/settings', icon: Settings, label: 'Settings' },
   ];

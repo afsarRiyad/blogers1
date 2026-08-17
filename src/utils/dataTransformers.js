@@ -15,7 +15,9 @@ export const transformPostData = (supabasePost) => {
     date: formatDate(supabasePost.created_at),
     content: supabasePost.content || [],
     tags: supabasePost.tags?.map(pt => pt.tags.name) || [],
-    prompt: supabasePost.prompts?.[0]?.prompt_text || '',
+    push_form_heading: supabasePost.push_form_heading || '',
+    push_form_subheading: supabasePost.push_form_subheading || '',
+    push_form_buttons: supabasePost.push_form_buttons || [],
   };
 };
 

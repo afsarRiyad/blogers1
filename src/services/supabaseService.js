@@ -102,8 +102,7 @@ export const postsService = {
       .select(`
         *,
         categories:category_id (*),
-        tags:post_tags (tags (*)),
-        prompts:prompts (*)
+        tags:post_tags (tags (*))
       `)
       .eq('published', true)
       .order('created_at', { ascending: false })
@@ -139,8 +138,7 @@ export const postsService = {
       .select(`
         *,
         categories:category_id (*),
-        tags:post_tags (tags (*)),
-        prompts:prompts (*)
+        tags:post_tags (tags (*))
       `)
       .eq('slug', slug)
       .eq('published', true)
@@ -161,8 +159,7 @@ export const postsService = {
       .select(`
         *,
         categories:category_id (*),
-        tags:post_tags (tags (*)),
-        prompts:prompts (*)
+        tags:post_tags (tags (*))
       `)
       .eq('id', id)
       .single();
@@ -182,8 +179,7 @@ export const postsService = {
       .select(`
         *,
         categories:category_id (*),
-        tags:post_tags (tags (*)),
-        prompts:prompts (*)
+        tags:post_tags (tags (*))
       `)
       .eq('published', true)
       .eq('categories.slug', categorySlug)
@@ -221,8 +217,7 @@ export const postsService = {
       .select(`
         *,
         categories:category_id (*),
-        tags:post_tags (tags (*)),
-        prompts:prompts (*)
+        tags:post_tags (tags (*))
       `)
       .eq('featured', true)
       .eq('published', true)
@@ -245,8 +240,7 @@ export const postsService = {
       .select(`
         *,
         categories:category_id (*),
-        tags:post_tags (tags (*)),
-        prompts:prompts (*)
+        tags:post_tags (tags (*))
       `)
       .eq('published', true)
       .order('views', { ascending: false })
@@ -267,8 +261,7 @@ export const postsService = {
       .select(`
         *,
         categories:category_id (*),
-        tags:post_tags (tags (*)),
-        prompts:prompts (*)
+        tags:post_tags (tags (*))
       `)
       .eq('published', true)
       .or(`title.ilike.%${query}%,description.ilike.%${query}%`)
@@ -368,7 +361,6 @@ export const postsService = {
 
     let finalData = { ...postData };
     if (postData.category_id && !isValidUUID(postData.category_id)) {
-      console.log('Category ID is not a UUID, trying to find by name:', postData.category_id);
       const { data: categoryData } = await supabase
         .from(TABLES.CATEGORIES)
         .select('id')
@@ -377,10 +369,8 @@ export const postsService = {
       
       if (categoryData) {
         finalData.category_id = categoryData.id;
-        console.log('Found category ID:', categoryData.id);
       } else {
         delete finalData.category_id;
-        console.log('Category not found, removing category_id');
       }
     }
 
